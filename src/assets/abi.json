@@ -78,236 +78,6 @@
   "name": "RoleRevoked",
   "type": "event"
 }, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "address",
-    "name": "_provider",
-    "type": "address"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_accruedYieldWithdrawn",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_stakeAdded",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newLockHeight",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightWithdrawn",
-    "type": "uint256"
-  }],
-  "name": "accruedYieldWithdrawn",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newLockPeriodScale",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightChanged",
-    "type": "uint256"
-  }],
-  "name": "lockPeriodBasisPointScalesChanged",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newLockPeriod0BasisPoint",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newLockPeriod1BasisPoint",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newLockPeriod2BasisPoint",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightChanged",
-    "type": "uint256"
-  }],
-  "name": "lockPeriodBasisPointsChanged",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newLockPeriod0",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newLockPeriod1",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newLockPeriod2",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightChanged",
-    "type": "uint256"
-  }],
-  "name": "lockPeriodsChanged",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newMaxUserBP",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightChanged",
-    "type": "uint256"
-  }],
-  "name": "maxUserBPChanged",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_newPeriodCalc",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightChanged",
-    "type": "uint256"
-  }],
-  "name": "periodCalcChanged",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "contract IERC20",
-    "name": "_lpTokenAddress",
-    "type": "address"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightAdded",
-    "type": "uint256"
-  }],
-  "name": "poolAdded",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "contract IERC20",
-    "name": "_lpTokenAddress",
-    "type": "address"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightRemoved",
-    "type": "uint256"
-  }],
-  "name": "poolRemoved",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "address",
-    "name": "_provider",
-    "type": "address"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_lockPeriod",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_lockedAmount",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightAdded",
-    "type": "uint256"
-  }],
-  "name": "positionAdded",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "address",
-    "name": "_provider",
-    "type": "address"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_accruedYieldWithdrawn",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_lockedAmountRemoved",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightRemoved",
-    "type": "uint256"
-  }],
-  "name": "positionRemoved",
-  "type": "event"
-}, {
-  "anonymous": false,
-  "inputs": [{
-    "indexed": false,
-    "internalType": "address",
-    "name": "_pebcak",
-    "type": "address"
-  }, {
-    "indexed": false,
-    "internalType": "address",
-    "name": "_ERC20",
-    "type": "address"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_ERC20Amount",
-    "type": "uint256"
-  }, {
-    "indexed": false,
-    "internalType": "uint256",
-    "name": "_blockHeightRescued",
-    "type": "uint256"
-  }],
-  "name": "tokensRescued",
-  "type": "event"
-}, {
   "inputs": [],
   "name": "DEFAULT_ADMIN_ROLE",
   "outputs": [{
@@ -338,6 +108,48 @@
   "stateMutability": "view",
   "type": "function"
 }, {
+  "inputs": [{
+    "internalType": "address",
+    "name": "_account",
+    "type": "address"
+  }, {
+    "internalType": "uint256",
+    "name": "_pid",
+    "type": "uint256"
+  }],
+  "name": "accountPosition",
+  "outputs": [{
+    "internalType": "address",
+    "name": "_accountAddress",
+    "type": "address"
+  }, {
+    "internalType": "uint256",
+    "name": "_unlockHeight",
+    "type": "uint256"
+  }, {
+    "internalType": "uint256",
+    "name": "_lockedAmount",
+    "type": "uint256"
+  }, {
+    "internalType": "uint256",
+    "name": "_lockPeriodInDays",
+    "type": "uint256"
+  }, {
+    "internalType": "uint256",
+    "name": "_userDPY",
+    "type": "uint256"
+  }, {
+    "internalType": "contract IERC20",
+    "name": "_lpTokenAddress",
+    "type": "address"
+  }, {
+    "internalType": "uint256",
+    "name": "_totalRewardsPaidFromPool",
+    "type": "uint256"
+  }],
+  "stateMutability": "view",
+  "type": "function"
+}, {
   "inputs": [],
   "name": "addDisabled",
   "outputs": [{
@@ -352,6 +164,10 @@
     "internalType": "contract IERC20",
     "name": "_lpTokenAddress",
     "type": "address"
+  }, {
+    "internalType": "uint256",
+    "name": "_bonus",
+    "type": "uint256"
   }],
   "name": "addLiquidtyPoolToken",
   "outputs": [],
@@ -440,20 +256,6 @@
   "name": "forcePositionRemoval",
   "outputs": [],
   "stateMutability": "nonpayable",
-  "type": "function"
-}, {
-  "inputs": [{
-    "internalType": "uint256",
-    "name": "_pid",
-    "type": "uint256"
-  }],
-  "name": "getPoolInfoByPID",
-  "outputs": [{
-    "internalType": "contract IERC20",
-    "name": "_lpTokenAddress",
-    "type": "address"
-  }],
-  "stateMutability": "view",
   "type": "function"
 }, {
   "inputs": [{
@@ -552,6 +354,16 @@
   "stateMutability": "view",
   "type": "function"
 }, {
+  "inputs": [],
+  "name": "maxUserBP",
+  "outputs": [{
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+  }],
+  "stateMutability": "view",
+  "type": "function"
+}, {
   "inputs": [{
     "internalType": "address",
     "name": "_ERC20",
@@ -568,32 +380,6 @@
   "name": "moveERC20",
   "outputs": [],
   "stateMutability": "nonpayable",
-  "type": "function"
-}, {
-  "inputs": [{
-    "internalType": "uint256",
-    "name": "_pid",
-    "type": "uint256"
-  }],
-  "name": "myPosition",
-  "outputs": [{
-    "internalType": "address",
-    "name": "_myAddress",
-    "type": "address"
-  }, {
-    "internalType": "uint256",
-    "name": "_unlockHeight",
-    "type": "uint256"
-  }, {
-    "internalType": "uint256",
-    "name": "_lockedAmount",
-    "type": "uint256"
-  }, {
-    "internalType": "contract IERC20",
-    "name": "_lpTokenAddress",
-    "type": "address"
-  }],
-  "stateMutability": "view",
   "type": "function"
 }, {
   "inputs": [],
@@ -616,6 +402,16 @@
   "stateMutability": "view",
   "type": "function"
 }, {
+  "inputs": [],
+  "name": "periodCalc",
+  "outputs": [{
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+  }],
+  "stateMutability": "view",
+  "type": "function"
+}, {
   "inputs": [{
     "internalType": "uint256",
     "name": "",
@@ -626,6 +422,18 @@
     "internalType": "contract IERC20",
     "name": "ContractAddress",
     "type": "address"
+  }, {
+    "internalType": "uint256",
+    "name": "TotalRewardsPaidByPool",
+    "type": "uint256"
+  }, {
+    "internalType": "uint256",
+    "name": "TotalLPTokensLocked",
+    "type": "uint256"
+  }, {
+    "internalType": "uint256",
+    "name": "PoolBonus",
+    "type": "uint256"
   }],
   "stateMutability": "view",
   "type": "function"
@@ -669,6 +477,10 @@
   }, {
     "internalType": "uint256",
     "name": "UserBP",
+    "type": "uint256"
+  }, {
+    "internalType": "uint256",
+    "name": "TotalRewardsPaid",
     "type": "uint256"
   }],
   "stateMutability": "view",
@@ -832,6 +644,30 @@
     "type": "uint256"
   }],
   "name": "setPeriodCalc",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+}, {
+  "inputs": [{
+    "internalType": "uint256",
+    "name": "_pid",
+    "type": "uint256"
+  }, {
+    "internalType": "uint256",
+    "name": "_bonus",
+    "type": "uint256"
+  }],
+  "name": "setPoolBonus",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+}, {
+  "inputs": [{
+    "internalType": "uint256",
+    "name": "_newDivisor",
+    "type": "uint256"
+  }],
+  "name": "setPreYieldDivisor",
   "outputs": [],
   "stateMutability": "nonpayable",
   "type": "function"

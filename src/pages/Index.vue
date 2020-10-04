@@ -26,8 +26,7 @@
             <br />
             <p style="text-align: left;">Select Lock Period</p>
             <br />
-            <q-slider v-model="lockPeriod" markers :min="7" :max="21" :step="7" label />
-            <!--<q-btn color="white" @click="" text-color="black" label="Add Stake" />-->
+            <q-slider v-model="lockPeriod" markers :min="1" :max="3" :step="1" label />
           </q-card-section>
 
           <q-card-section>
@@ -44,6 +43,36 @@
             <q-select filled v-model="tokenOptions" :options="tokens" label="Select Pool" />
             <br>
             <q-btn color="white" @click="selectPool" text-color="black" label="Look For Open Positions" />
+          </q-card-section>
+          <!-- Has A Position -->
+          <q-card-section class="q-pt-none" v-if="HasPosition === true">
+            <q-card class="my-card">
+              <q-card-section class="bg-primary text-white">
+                <div class="text-h6">Current Position:</div>
+                <div class="text-subtitle2">Unlock Height: {{ UnlockHeight }} | Locked Amount: {{ LockedAmount }} FMTA</div>
+                <div class="text-subtitle2">Days: {{ Days }} | User BP: {{ UserBP }}</div>
+                <div class="text-subtitle2">Total Rewards Paid: {{ TotalRewardsPaid }} FMTA</div>
+              </q-card-section>
+
+              <q-separator />
+
+              <q-card-actions align="center">
+                <q-btn label="Withdraw Yield & Add LP Tokens" flat @click="withdrawAndAdd"></q-btn>
+                <q-btn label="Remove Entire Position" @click="removeEntirePosition" flat></q-btn>
+              </q-card-actions>
+
+              <q-card-section class="bg-primary text-white" v-if="withdrew === true">
+                <q-input v-model="withdrawAmount" type="number" label="Enter Amount to Add" />
+                <q-btn color="white" @click="finalWithdraw" text-color="black" label="Approve" />
+              </q-card-section>
+
+            </q-card>
+          </q-card-section>
+          <!-- No Position -->
+          <q-card-section class="q-pt-none" v-if="HasPosition === false">
+            <q-banner inline-actions class="text-white bg-red" rounded>
+              We Couldn't Find Any Open Positions.
+            </q-banner>
           </q-card-section>
         </q-card>
       </div>
@@ -72,7 +101,7 @@ if (!ethEnabled()) {
     "Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!"
   );
 }
-const contractAddress = "0xa1c3f791100CaA62aA2C34952e27E8C4e2F85A07";
+const contractAddress = "0xC71112aeF52B2c4200fBCA3dF14d25d066D46CA1";
 const contract = new window.web3.eth.Contract(ABI, contractAddress);
 const uniswapETHFTMA = "0xa1e9246db65237c6465e8f2ee96c7816b46394c4";
 const uniswapETHFTMAContract = new window.web3.eth.Contract(
@@ -90,7 +119,16 @@ export default {
       positionAmount: "",
       tokenOptions: null,
       tokens: pools,
-      lockPeriod: 7,
+      lockPeriod: 1,
+      HasPosition: "",
+      UnlockHeight: "",
+      LockedAmount: "",
+      Days: "",
+      UserBP: "",
+      TotalRewardsPaid: "",
+      withdrew: "",
+      withdrawAmount: "",
+      removeAll: "",
     };
   },
   created() {
@@ -130,7 +168,7 @@ export default {
         );
         console.log('Approval Amount: ' + amountInt);
         uniswapETHFTMAContract.methods
-          .approve('0xA8DFb731d14e08068ebd233b56936F2AAa22B518', amount)
+          .approve("0xC71112aeF52B2c4200fBCA3dF14d25d066D46CA1", amount)
           .send({
             from: userAccount[0]
           }).then((receipt) => {
@@ -169,11 +207,75 @@ export default {
         method: "eth_requestAccounts"
       });
       contract.methods
-        .myPosition(poolId)
+        .hasPosition(userAccount[0], poolId)
         .call({
           from: userAccount[0]
         }).then((receipt) => {
-          console.log(receipt);
+          this.HasPosition = receipt;
+          contract.methods
+            .provider(poolId, userAccount[0])
+            .call().then(response => {
+              this.UnlockHeight = response.UnlockHeight;
+              this.LockedAmount = (response.LockedAmount / 1000000000000000000);
+              this.Days = response.Days;
+              this.UserBP = response.UserBP;
+              this.TotalRewardsPaid = (response.TotalRewardsPaid / 1000000000000000000);
+            });
+        });
+    },
+    async withdrawAndAdd() {
+      this.withdrew = true;
+    },
+    async finalWithdraw() {
+      const provider = await detectEthereumProvider();
+      const poolId = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        this.tokenOptions.pid
+      );
+      const userAccount = await provider.request({
+        method: "eth_requestAccounts"
+      });
+      const amountToWithdraw = window.web3.utils.toWei(this.withdrawAmount, "ether");
+      const amount = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        amountToWithdraw
+      );
+      uniswapETHFTMAContract.methods
+        .approve("0xC71112aeF52B2c4200fBCA3dF14d25d066D46CA1", amount)
+        .send({
+          from: userAccount[0]
+        }).then((receipt) => {
+          contract.methods
+            .withdrawAccruedYieldAndAdd(poolId, amount)
+            .send({
+              from: userAccount[0]
+            })
+        });
+    },
+    async removeEntirePosition() {
+      const provider = await detectEthereumProvider();
+      const poolId = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        this.tokenOptions.pid
+      );
+      const userAccount = await provider.request({
+        method: "eth_requestAccounts"
+      });
+      contract.methods
+        .provider(poolId, userAccount[0])
+        .call().then(response => {
+          const entirePosition = response.LockedAmount
+          const entirePositionFinal = window.web3.eth.abi.encodeParameter(
+            "uint256",
+            entirePosition
+          );
+          console.log(entirePosition + " Entire Position as Wei")
+          console.log(entirePositionFinal + " Entire Position as uint256")
+          contract.methods
+            .removePosition(entirePositionFinal, poolId)
+            .send({
+              from: userAccount[0]
+            })
         });
     },
   }
