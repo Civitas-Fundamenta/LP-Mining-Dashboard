@@ -26,7 +26,7 @@
             <br />
             <p style="text-align: left;">Select Lock Period</p>
             <br />
-            <q-slider v-model="lockPeriod" markers :min="1" :max="5" :step="2" label />
+            <q-slider v-model="lockPeriod" markers :min="7" :max="21" :step="7" label />
             <!--<q-btn color="white" @click="" text-color="black" label="Add Stake" />-->
           </q-card-section>
 
@@ -38,9 +38,13 @@
       <div class="col" style="padding: 2%;">
         <q-card flat bordered>
           <q-card-section>
-            Maximum Stake:
+            Removed Position:
           </q-card-section>
-          <q-card-section class="q-pt-none"> </q-card-section>
+          <q-card-section class="q-pt-none">
+            <q-select filled v-model="tokenOptions" :options="tokens" label="Select Pool" />
+            <br>
+            <q-btn color="white" @click="selectPool" text-color="black" label="Look For Open Positions" />
+          </q-card-section>
         </q-card>
       </div>
     </div>
@@ -68,7 +72,7 @@ if (!ethEnabled()) {
     "Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!"
   );
 }
-const contractAddress = "0xA8DFb731d14e08068ebd233b56936F2AAa22B518";
+const contractAddress = "0xa1c3f791100CaA62aA2C34952e27E8C4e2F85A07";
 const contract = new window.web3.eth.Contract(ABI, contractAddress);
 const uniswapETHFTMA = "0xa1e9246db65237c6465e8f2ee96c7816b46394c4";
 const uniswapETHFTMAContract = new window.web3.eth.Contract(
@@ -86,7 +90,7 @@ export default {
       positionAmount: "",
       tokenOptions: null,
       tokens: pools,
-      lockPeriod: 1,
+      lockPeriod: 7,
     };
   },
   created() {
@@ -154,6 +158,23 @@ export default {
               })
           });
       }
+    },
+    async selectPool() {
+      const provider = await detectEthereumProvider();
+      const poolId = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        this.tokenOptions.pid
+      );
+      const userAccount = await provider.request({
+        method: "eth_requestAccounts"
+      });
+      contract.methods
+        .myPosition(poolId)
+        .call({
+          from: userAccount[0]
+        }).then((receipt) => {
+          console.log(receipt);
+        });
     },
   }
 };
