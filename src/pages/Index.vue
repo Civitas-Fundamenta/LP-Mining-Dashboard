@@ -64,7 +64,7 @@
 
               <q-card-section class="bg-primary text-white" v-if="withdrew === true">
                 <q-input v-model="withdrawAmount" type="number" dark label-color="white" color="white" label="Enter Amount to Add" />
-                <q-btn color="white" @click="finalWithdraw" label="Approve" />
+                <q-btn text-color="black" color="white" @click="finalWithdraw" label="Approve" />
               </q-card-section>
 
             </q-card>
@@ -102,7 +102,7 @@ if (!ethEnabled()) {
     "Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!"
   );
 }
-const contractAddress = "0xC71112aeF52B2c4200fBCA3dF14d25d066D46CA1";
+const contractAddress = "0xaeCC3f25060AB5f8e465CE9aA0a3feB464B791F6";
 const contract = new window.web3.eth.Contract(ABI, contractAddress);
 const uniswapETHFTMA = "0xa1e9246db65237c6465e8f2ee96c7816b46394c4";
 const uniswapETHFTMAContract = new window.web3.eth.Contract(
@@ -169,7 +169,7 @@ export default {
         );
         console.log('Approval Amount: ' + amountInt);
         uniswapETHFTMAContract.methods
-          .approve("0xC71112aeF52B2c4200fBCA3dF14d25d066D46CA1", amount)
+          .approve("0xaeCC3f25060AB5f8e465CE9aA0a3feB464B791F6", amount)
           .send({
             from: userAccount[0]
           }).then((receipt) => {
@@ -242,7 +242,7 @@ export default {
         amountToWithdraw
       );
       uniswapETHFTMAContract.methods
-        .approve("0xC71112aeF52B2c4200fBCA3dF14d25d066D46CA1", amount)
+        .approve("0xaeCC3f25060AB5f8e465CE9aA0a3feB464B791F6", amount)
         .send({
           from: userAccount[0]
         }).then((receipt) => {
