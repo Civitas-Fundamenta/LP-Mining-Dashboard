@@ -50,6 +50,5 @@ export default {
 <style>
   .bg {
     background-image: url(../assets/gm2.jpg);
-    background-repeat: no-repeat;
   }
 </style>
