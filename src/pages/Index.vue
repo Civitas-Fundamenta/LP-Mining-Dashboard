@@ -12,14 +12,14 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <q-input v-model="positionAmount" type="number" label="Enter Amount to Add" />
+            <q-input v-model="positionAmount" dark label-color="white" color="white" type="number" label="Enter Amount to Add" />
           </q-card-section>
 
           <q-card-section class="q-pt-none">
             <br />
             <p style="text-align: left;">Select Token</p>
             <br />
-            <q-select filled v-model="tokenOptions" :options="tokens" label="Select Token" />
+            <q-select filled v-model="tokenOptions" color="white" dark :options="tokens" label="Select Token" />
           </q-card-section>
 
           <q-card-section>
@@ -40,7 +40,7 @@
             Remove Position/Withdraw Yield
           </q-card-section>
           <q-card-section class="q-pt-none">
-            <q-select filled v-model="tokenOptions" :options="tokens" label="Select Pool" />
+            <q-select filled v-model="tokenOptions" dark color="white" :options="tokens" label="Select Pool" />
             <br>
             <q-btn color="white" @click="selectPool" text-color="black" label="Look For Open Positions" />
           </q-card-section>
@@ -63,8 +63,8 @@
               </q-card-actions>
 
               <q-card-section class="bg-primary text-white" v-if="withdrew === true">
-                <q-input v-model="withdrawAmount" type="number" label="Enter Amount to Add" />
-                <q-btn color="white" @click="finalWithdraw" text-color="black" label="Approve" />
+                <q-input v-model="withdrawAmount" type="number" dark label-color="white" color="white" label="Enter Amount to Add" />
+                <q-btn color="white" @click="finalWithdraw" label="Approve" />
               </q-card-section>
 
             </q-card>
