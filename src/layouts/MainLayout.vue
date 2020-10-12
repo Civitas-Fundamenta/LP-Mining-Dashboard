@@ -1,11 +1,12 @@
 <template>
+<div class="bg font">
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-avatar>
-          <img src="../assets/logo.svg">
+          <img src="../assets/logocf.svg">
         </q-avatar>
-        <q-toolbar-title>
+        <q-toolbar-title v-if="!$q.platform.is.mobile">
           Fundamenta Staking Dashboard
         </q-toolbar-title>
 
@@ -30,6 +31,7 @@
       <router-view />
     </q-page-container>
   </q-layout>
+</div>
 </template>
 
 <script>
@@ -45,3 +47,9 @@ export default {
   },
 };
 </script>
+<style>
+  .bg {
+    background-image: url(../assets/gm2.jpg);
+    background-repeat: no-repeat;
+  }
+</style>

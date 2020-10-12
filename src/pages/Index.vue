@@ -5,8 +5,8 @@
   </div>
   <div v-if="paused === false">
     <div class="row text-center">
-      <div class="col" style="padding: 2%;">
-        <q-card>
+      <div class="col-xs-12 col-sm-6" style="padding: 2%;">
+        <q-card class="cbg">
           <q-card-section>
             <div class="text-h6">Open A Position</div>
           </q-card-section>
@@ -34,10 +34,10 @@
           </q-card-section>
         </q-card>
       </div>
-      <div class="col" style="padding: 2%;">
-        <q-card flat bordered>
+      <div class="col-xs-12 col-sm-6" style="padding: 2%;">
+        <q-card flat bordered class="cbg">
           <q-card-section>
-            Removed Position:
+            Remove Position/Withdraw Yield
           </q-card-section>
           <q-card-section class="q-pt-none">
             <q-select filled v-model="tokenOptions" :options="tokens" label="Select Pool" />
@@ -46,18 +46,19 @@
           </q-card-section>
           <!-- Has A Position -->
           <q-card-section class="q-pt-none" v-if="HasPosition === true">
-            <q-card class="my-card">
+            <q-card class="my-card cbg">
               <q-card-section class="bg-primary text-white">
                 <div class="text-h6">Current Position:</div>
-                <div class="text-subtitle2">Unlock Height: {{ UnlockHeight }} | Locked Amount: {{ LockedAmount }} FMTA</div>
-                <div class="text-subtitle2">Days: {{ Days }} | User BP: {{ UserBP }}</div>
+                <div class="text-subtitle2">Unlock Height: {{ UnlockHeight }} | Locked: {{ LockedAmount }} LP Tokens</div>
+                <div class="text-subtitle2">Lock Period: {{ Days }} Days | DPY: {{ UserBP / 100 }}% </div>
                 <div class="text-subtitle2">Total Rewards Paid: {{ TotalRewardsPaid }} FMTA</div>
               </q-card-section>
 
               <q-separator />
 
               <q-card-actions align="center">
-                <q-btn label="Withdraw Yield & Add LP Tokens" flat @click="withdrawAndAdd"></q-btn>
+                <q-btn label="Withdraw Yield Only" flat @click="withdrawOnly"></q-btn>
+                <q-btn label="Withdraw & Add" flat @click="withdrawAndAdd"></q-btn>
                 <q-btn label="Remove Entire Position" @click="removeEntirePosition" flat></q-btn>
               </q-card-actions>
 
@@ -251,6 +252,26 @@ export default {
               from: userAccount[0]
             })
         });
+    },
+    async withdrawOnly() {
+      const provider = await detectEthereumProvider();
+      const poolId = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        this.tokenOptions.pid
+      );
+      const userAccount = await provider.request({
+        method: "eth_requestAccounts"
+      });
+      //const amountToWithdraw = window.web3.utils.toWei(this.withdrawAmount, "ether");
+      const amount = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        0
+      );
+      contract.methods
+        .withdrawAccruedYieldAndAdd(poolId, amount)
+        .send({
+          from: userAccount[0]
+        })
     },
     async removeEntirePosition() {
       const provider = await detectEthereumProvider();
