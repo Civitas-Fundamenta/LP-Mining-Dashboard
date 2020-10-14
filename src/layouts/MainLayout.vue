@@ -10,7 +10,7 @@
         </q-avatar>
         </a>
         <q-toolbar-title v-if="!$q.platform.is.mobile">
-          Fundamenta Staking Dashboard
+          Fundamenta Staking and Liquidity Mining
         </q-toolbar-title>
 
         <div>
@@ -58,10 +58,10 @@
           <router-link to="/Mining">
             <q-item v-ripple>
               <q-item-section avatar>
-                <q-icon name="fas fa-print" />
+                <q-icon name="fas fa-coins" />
               </q-item-section>
               <q-item-section>
-                LP Mining Dashboard
+                Liquidity Mining Dashboard
               </q-item-section>
             </q-item>
           </router-link>
