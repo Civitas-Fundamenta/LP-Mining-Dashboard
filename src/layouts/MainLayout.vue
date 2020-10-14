@@ -4,9 +4,11 @@
     <q-header elevated>
       <q-toolbar>
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
+        <a href="/#/">
         <q-avatar>
           <img src="../assets/logocf.svg">
         </q-avatar>
+        </a>
         <q-toolbar-title v-if="!$q.platform.is.mobile">
           Fundamenta Staking Dashboard
         </q-toolbar-title>

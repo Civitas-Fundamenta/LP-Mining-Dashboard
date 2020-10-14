@@ -122,9 +122,9 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Quasar App',
-        short_name: 'Quasar App',
-        description: 'A Quasar Framework app',
+        name: 'Fundamenta Staking and Liquidity Mining Dapp',
+        short_name: 'Fundamenta Dapp',
+        description: 'Civitas Fundamenta - Community Governed Capital',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
