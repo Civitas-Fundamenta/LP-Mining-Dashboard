@@ -139,9 +139,6 @@ export default {
     async CheckChainData() {
       const provider = await detectEthereumProvider();
       if (provider) {
-        const chainId = await provider.request({
-          method: "eth_chainId"
-        });
         const userAccount = await provider.request({
           method: "eth_requestAccounts"
         });
@@ -156,9 +153,6 @@ export default {
     async getApproval() {
       const provider = await detectEthereumProvider();
       if (provider) {
-        const chainId = await provider.request({
-          method: "eth_chainId"
-        });
         const userAccount = await provider.request({
           method: "eth_requestAccounts"
         });

@@ -275,53 +275,44 @@ export default {
     async CheckChainData() {
       const provider = await detectEthereumProvider();
       if (provider) {
-        const chainId = await provider.request({
-          method: 'eth_chainId',
-        });
         const userAccount = await provider.request({
           method: 'eth_requestAccounts',
         });
-        if (chainId !== '0x05' && !this.$q.platform.is.mobile) {
-          this.$q.notify('Please Switch To Goerli Network & Refresh the page.');
-        } else if (this.$q.platform.is.mobile && chainId !== '0x5') {
-          this.$q.notify('Please Switch To Goerli Network & Refresh the page.');
-        } else {
-          staking.methods.stakingOff().call().then((response) => {
-            this.off = response;
-          });
-          staking.methods.paused().call().then((response) => {
-            this.paused = response;
-          });
-          staking.methods.totalStakes().call().then((response) => {
-            this.totalStakes = (response / 1000000000000000000);
-          });
-          staking.methods.totalRewardsPaid().call().then((response) => {
-            this.totalRewardsPaid = (response / 1000000000000000000);
-          });
-          staking.methods.stakeCap().call().then((response) => {
-            this.stakeCap = (response / 1000000000000000000);
-          });
-          staking.methods.rewardsWindow().call().then((response) => {
-            this.rewardsWindow = response;
-          });
-          staking.methods.isStakeholder(userAccount[0]).call().then((response) => {
-            // eslint-disable-next-line
+        staking.methods.stakingOff().call().then((response) => {
+          this.off = response;
+        });
+        staking.methods.paused().call().then((response) => {
+          this.paused = response;
+        });
+        staking.methods.totalStakes().call().then((response) => {
+          this.totalStakes = (response / 1000000000000000000);
+        });
+        staking.methods.totalRewardsPaid().call().then((response) => {
+          this.totalRewardsPaid = (response / 1000000000000000000);
+        });
+        staking.methods.stakeCap().call().then((response) => {
+          this.stakeCap = (response / 1000000000000000000);
+        });
+        staking.methods.rewardsWindow().call().then((response) => {
+          this.rewardsWindow = response;
+        });
+        staking.methods.isStakeholder(userAccount[0]).call().then((response) => {
+          // eslint-disable-next-line
             this.isStakeholder = response[0];
-            if (this.isStakeholder === true) {
-              staking.methods.rewardOf(userAccount[0]).call().then((respond) => {
-                this.rewardOf = (respond / 1000000000000000000);
-              });
-              staking.methods.stakeOf(userAccount[0]).call().then((resp) => {
-                this.stakeOf = (resp / 1000000000000000000);
-              });
-              staking.methods.rewardsAccrued().call({
-                from: userAccount[0],
-              }).then((resp) => {
-                this.pendingRewards = (resp / 1000000000000000000);
-              });
-            }
-          });
-        }
+          if (this.isStakeholder === true) {
+            staking.methods.rewardOf(userAccount[0]).call().then((respond) => {
+              this.rewardOf = (respond / 1000000000000000000);
+            });
+            staking.methods.stakeOf(userAccount[0]).call().then((resp) => {
+              this.stakeOf = (resp / 1000000000000000000);
+            });
+            staking.methods.rewardsAccrued().call({
+              from: userAccount[0],
+            }).then((resp) => {
+              this.pendingRewards = (resp / 1000000000000000000);
+            });
+          }
+        });
       } else {
         this.$q.notify('Metamask not dectected. Please Install Metamask.');
       }
