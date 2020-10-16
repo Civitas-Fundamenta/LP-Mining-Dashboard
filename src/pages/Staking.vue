@@ -244,7 +244,7 @@ if (!ethEnabled()) {
   alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
 }
 
-const stakingAddress = '0xc959eE7196762fb12EA4475ABCFc37F99a8b9140';
+const stakingAddress = '0x5Fc32B4Ae08010BB332f0D42Fa24ff81A7c7A501';
 const staking = new window.web3.eth.Contract(ABI, stakingAddress);
 
 export default {
