@@ -26,7 +26,7 @@
             <br />
             <p style="text-align: left;">Select Lock Period</p>
             <br />
-            <q-slider v-model="lockPeriod" markers :min="1" :max="3" :step="1" label />
+            <q-slider v-model="lockPeriod" markers :min="5" :max="15" :step="5" label />
           </q-card-section>
 
           <q-card-section>
@@ -102,9 +102,9 @@ if (!ethEnabled()) {
     "Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!"
   );
 }
-const contractAddress = "0x54B1406e7803e18AfE82c4e3Df40C10e2854b4d8 ";
+const contractAddress = "0x54B1406e7803e18AfE82c4e3Df40C10e2854b4d8";
 const contract = new window.web3.eth.Contract(ABI, contractAddress);
-const uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb ";
+const uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb";
 const uniswapETHFTMAContract = new window.web3.eth.Contract(
   uniswapETHFTMAABI,
   uniswapETHFTMA
