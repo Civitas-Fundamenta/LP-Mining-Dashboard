@@ -102,9 +102,9 @@ if (!ethEnabled()) {
     "Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!"
   );
 }
-const contractAddress = "0xaeCC3f25060AB5f8e465CE9aA0a3feB464B791F6";
+const contractAddress = "0x54B1406e7803e18AfE82c4e3Df40C10e2854b4d8 ";
 const contract = new window.web3.eth.Contract(ABI, contractAddress);
-const uniswapETHFTMA = "0xa1e9246db65237c6465e8f2ee96c7816b46394c4";
+const uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb ";
 const uniswapETHFTMAContract = new window.web3.eth.Contract(
   uniswapETHFTMAABI,
   uniswapETHFTMA
