@@ -44,7 +44,7 @@
                 Rewards Paid
               </q-card-section>
               <q-card-section class="q-pt-none">
-                {{ totalRewardsPaid.toLocaleString() }}
+                {{ rewardCalc.toLocaleString() }}
               </q-card-section>
             </q-card>
           </div>
@@ -254,7 +254,6 @@ export default {
       off: '',
       paused: '',
       totalStakes: '',
-      totalRewardsPaid: '',
       stakeCap: '',
       isStakeholder: '',
       rewardCalc: '',
@@ -286,9 +285,6 @@ export default {
         });
         staking.methods.totalStakes().call().then((response) => {
           this.totalStakes = (response / 1000000000000000000);
-        });
-        staking.methods.totalRewardsPaid().call().then((response) => {
-          this.totalRewardsPaid = (response / 1000000000000000000);
         });
         staking.methods.stakeCap().call().then((response) => {
           this.stakeCap = (response / 1000000000000000000);
