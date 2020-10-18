@@ -6,7 +6,7 @@
           <i class="fas fa-coins fa-10x" style="padding: 25%;"></i>
           <q-card-section>
             <a href="/#/Mining">
-            <q-btn color="white" @click="getApproval" text-color="black" label="Liquidity Mining" />
+            <q-btn color="white" text-color="black" label="Liquidity Mining" />
             </a>
           </q-card-section>
         </q-card>
@@ -16,7 +16,7 @@
           <i class="fas fa-money-bill-wave fa-10x" style="padding: 25%;"></i>
         <q-card-section>
           <a href="/#/Staking">
-            <q-btn color="white" @click="selectPool" text-color="black" label="Token Staking" />
+            <q-btn color="white" text-color="black" label="Token Staking" />
           </a>
         </q-card-section>
         </q-card>
