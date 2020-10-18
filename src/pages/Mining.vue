@@ -50,7 +50,7 @@
               <q-card-section class="bg-primary text-white">
                 <div class="text-h6">Current Position:</div>
                 <div class="text-subtitle2">Unlock Height: {{ UnlockHeight }} | Locked: {{ LockedAmount }} LP Tokens</div>
-                <div class="text-subtitle2">Lock Period: {{ Days }} Days | DPY: {{ UserBP / 100 }}% </div>
+                <div class="text-subtitle2">Lock Period: {{ Days }} Days | DPY (User BP): {{ UserBP}} </div>
                 <div class="text-subtitle2">Total Rewards Paid: {{ TotalRewardsPaid }} FMTA</div>
               </q-card-section>
 
