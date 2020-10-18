@@ -30,7 +30,7 @@
           </q-card-section>
 
           <q-card-section>
-            <q-btn color="white" @click="getApproval" text-color="black" label="Open Position" />
+            <q-btn color="white" @click="getApproval" text-color="black" label="Approve" />
           </q-card-section>
         </q-card>
       </div>
@@ -102,9 +102,9 @@ if (!ethEnabled()) {
     "Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!"
   );
 }
-const contractAddress = "0xB187c8E40b46Ae8fc19A6cC24bb60320a73b9abD";
+const contractAddress = "0xB187c8E40b46Ae8fc19A6cC24bb60320a73b9abD"; // Liquidity Mining Contract
 const contract = new window.web3.eth.Contract(ABI, contractAddress);
-const uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb";
+const uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb"; // USDC/FMTA Pool UNI-V2 Token
 const uniswapETHFTMAContract = new window.web3.eth.Contract(
   uniswapETHFTMAABI,
   uniswapETHFTMA
@@ -163,7 +163,7 @@ export default {
         );
         console.log('Approval Amount: ' + amountInt);
         uniswapETHFTMAContract.methods
-          .approve("0xaeCC3f25060AB5f8e465CE9aA0a3feB464B791F6", amount)
+          .approve("0xB187c8E40b46Ae8fc19A6cC24bb60320a73b9abD", amount)
           .send({
             from: userAccount[0]
           }).then((receipt) => {
