@@ -257,7 +257,7 @@ export default {
       totalRewardsPaid: '',
       stakeCap: '',
       isStakeholder: '',
-      rewardOf: '',
+      rewardCalc: '',
       stakeOf: '',
       rewardsWindow: '',
       addStakeAmount: '',
@@ -300,8 +300,8 @@ export default {
           // eslint-disable-next-line
             this.isStakeholder = response[0];
           if (this.isStakeholder === true) {
-            staking.methods.rewardOf(userAccount[0]).call().then((respond) => {
-              this.rewardOf = (respond / 1000000000000000000);
+            staking.methods.totalRewardsOf(userAccount[0]).call().then((respond) => {
+              this.rewardCalc = (respond / 1000000000000000000);
             });
             staking.methods.stakeOf(userAccount[0]).call().then((resp) => {
               this.stakeOf = (resp / 1000000000000000000);
