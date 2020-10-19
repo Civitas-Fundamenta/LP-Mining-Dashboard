@@ -173,6 +173,10 @@ export default {
       }
     },
     async createPosition() {
+      const provider = await detectEthereumProvider();
+      const userAccount = await provider.request({
+        method: "eth_requestAccounts"
+      });
       const amountInt = window.web3.utils.toWei(this.positionAmount, "ether");
       const amount = window.web3.eth.abi.encodeParameter(
         "uint256",
