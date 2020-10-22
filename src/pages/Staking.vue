@@ -73,9 +73,16 @@
               <q-card-section class="b">
                 Stake Unlock Height | Rewards Unlock Height
               </q-card-section>
+              <div v-if="isStakeholder === true">
               <q-card-section class="q-pt-none">
                 {{ lastWdheight.toLocaleString() }}
               </q-card-section>
+              </div>
+              <div v-if="isStakeholder === false">
+              <q-card-section class="q-pt-none">
+                0 | 0
+              </q-card-section>
+              </div>
             </q-card>
           </div>
         </div>
