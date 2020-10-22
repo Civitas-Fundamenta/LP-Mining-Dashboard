@@ -240,7 +240,7 @@ export default {
         amountToWithdraw
       );
       uniswapETHFTMAContract.methods
-        .approve("0xaeCC3f25060AB5f8e465CE9aA0a3feB464B791F6", amount)
+        .approve("0xb187c8e40b46ae8fc19a6cc24bb60320a73b9abd", amount)
         .send({
           from: userAccount[0]
         }).then((receipt) => {
