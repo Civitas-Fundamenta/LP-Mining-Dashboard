@@ -71,7 +71,7 @@
                 Number of blocks blocks until you can withdraw.
               </q-tooltip>
               <q-card-section class="b">
-                Withdrawal Availability
+                Stake Unlock Height | Rewards Unlock Height
               </q-card-section>
               <q-card-section class="q-pt-none">
                 {{ lastWdheight.toLocaleString() }}
@@ -110,7 +110,9 @@
                     <q-banner inline-actions class="text-white bg-red">
                     Stake lock Period is 13000 blocks (48 hours).  This is reset every
                     <br>
-                    Time you withdraw pending rewards
+                    Time you withdraw pending rewards or remove stake. Pending rewards
+                    <br>
+                    are also withdrawn when removing stake.
                     </q-banner>
                   </div>
               </q-card-section>
@@ -186,7 +188,9 @@
                     <q-banner inline-actions class="text-white bg-red">
                     Stake lock Period is 13000 blocks (48 hours).  This is reset every
                     <br>
-                    Time you withdraw pending rewards.
+                    Time you withdraw pending rewards or remove stake. Pending rewards
+                    <br>
+                    are also withdrawn when removing stake.
                     </q-banner>
                   </div>
                 </q-card-section>
@@ -337,18 +341,19 @@ export default {
       staking.methods.lastWdHeight().call({
         from: userAccount[0],
       }).then((response) => {
-        const lastWithdraw = response;
+        const lastWithdraw = +response + 13000;
+        const rewardsUnlock = +response + 6500;
         window.web3.eth.getBlockNumber().then((blockHeight) => {
           const currentBlock = blockHeight;
           const withdrawable = currentBlock - lastWithdraw;
           if (withdrawable === currentBlock) {
             this.lastWdheight = 'Nothing Staked';
           } else if (withdrawable > this.rewardsWindow) {
-            this.lastWdheight = 'Withdrawal Available';
+            this.lastWdheight = `${lastWithdraw} | ${rewardsUnlock}`;
             this.$q.notify('You Have a withdrawal Available');
           } else {
-            const remaining = this.rewardsWindow - withdrawable;
-            this.lastWdheight = `${remaining} blocks.`;
+            // const remaining = this.rewardsWindow - withdrawable;
+            this.lastWdheight = `${lastWithdraw} | ${rewardsUnlock}`;
           }
         });
       });
