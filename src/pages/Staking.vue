@@ -34,7 +34,7 @@
             </q-card>
           </div>
         </div>
-        <div class="col-xs-6 col-sm-4" style="padding: 2%;">
+        <div class="col-xs-12 col-sm-4" style="padding: 2%;">
           <div class="shadow-5">
             <q-card bordered class="cbg">
               <q-tooltip transition-show="flip-right" transition-hide="flip-left">
@@ -49,17 +49,17 @@
             </q-card>
           </div>
         </div>
-        <div class="col-xs-6 col-sm-6 BOTTOM RIGHT" style="padding: 2%;">
+        <div class="col-xs-12 col-sm-6" style="padding: 2%;">
           <div class="shadow-5">
             <q-card bordered class="cbg">
               <q-tooltip transition-show="flip-right" transition-hide="flip-left">
                 Current number of blocks needed between rewards withdrawals
               </q-tooltip>
               <q-card-section class="b">
-                Reward Window
+                Stake Removal Window | Pending Rewards Window (blocks)
               </q-card-section>
               <q-card-section class="q-pt-none">
-                {{ rewardsWindow.toLocaleString() }}
+                13000 | {{ rewardsWindow.toLocaleString() }}
               </q-card-section>
             </q-card>
           </div>
@@ -352,7 +352,6 @@ export default {
             this.lastWdheight = `${lastWithdraw} | ${rewardsUnlock}`;
             this.$q.notify('You Have a withdrawal Available');
           } else {
-            // const remaining = this.rewardsWindow - withdrawable;
             this.lastWdheight = `${lastWithdraw} | ${rewardsUnlock}`;
           }
         });
