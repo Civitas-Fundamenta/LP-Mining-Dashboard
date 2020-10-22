@@ -31,6 +31,7 @@
 
           <q-card-section>
             <q-btn color="white" @click="getApproval" text-color="black" label="Approve" />
+            <q-btn color="white" style="margin-left: 1%;" @click="createPosition" text-color="black" label="Create Position" />
           </q-card-section>
         </q-card>
       </div>
@@ -161,36 +162,39 @@ export default {
           "uint256",
           amountInt
         );
-        console.log('Approval Amount: ' + amountInt);
+        const poolAddress = this.tokenOptions.address;
         uniswapETHFTMAContract.methods
-          .approve("0xB187c8E40b46Ae8fc19A6cC24bb60320a73b9abD", amount)
+          .approve(poolAddress, amount)
           .send({
             from: userAccount[0]
           }).then((receipt) => {
-            console.log(receipt);
-            const amountInt = window.web3.utils.toWei(this.positionAmount, "ether");
-            const amount = window.web3.eth.abi.encodeParameter(
-              "uint256",
-              amountInt
-            );
-            console.log('Position Amount: ' + amountInt);
-            const lockInPeriod = window.web3.eth.abi.encodeParameter(
-              "uint256",
-              this.lockPeriod
-            );
-            console.log('Selected Lock in Period: ' + this.lockPeriod);
-            const poolId = window.web3.eth.abi.encodeParameter(
-              "uint256",
-              this.tokenOptions.pid
-            );
-            console.log('Pool ID of Selection: ' + this.tokenOptions.pid);
-            contract.methods
-              .addPosition(amount, lockInPeriod, poolId)
-              .send({
-                from: userAccount[0]
-              })
+            this.$q.notify(`Stake Added - Transaction Hash: ${receipt.hash}`);
           });
       }
+    },
+    async createPosition() {
+      const provider = await detectEthereumProvider();
+      const userAccount = await provider.request({
+        method: "eth_requestAccounts"
+      });
+      const amountInt = window.web3.utils.toWei(this.positionAmount, "ether");
+      const amount = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        amountInt
+      );
+      const poolId = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        this.tokenOptions.pid
+      );
+      const lockInPeriod = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        this.lockPeriod
+      );
+      contract.methods
+        .addPosition(amount, lockInPeriod, poolId)
+        .send({
+          from: userAccount[0]
+        })
     },
     async selectPool() {
       const provider = await detectEthereumProvider();
@@ -236,7 +240,7 @@ export default {
         amountToWithdraw
       );
       uniswapETHFTMAContract.methods
-        .approve("0xaeCC3f25060AB5f8e465CE9aA0a3feB464B791F6", amount)
+        .approve("0xb187c8e40b46ae8fc19a6cc24bb60320a73b9abd", amount)
         .send({
           from: userAccount[0]
         }).then((receipt) => {

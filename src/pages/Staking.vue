@@ -34,7 +34,7 @@
             </q-card>
           </div>
         </div>
-        <div class="col-xs-6 col-sm-4" style="padding: 2%;">
+        <div class="col-xs-12 col-sm-4" style="padding: 2%;">
           <div class="shadow-5">
             <q-card bordered class="cbg">
               <q-tooltip transition-show="flip-right" transition-hide="flip-left">
@@ -49,17 +49,17 @@
             </q-card>
           </div>
         </div>
-        <div class="col-xs-6 col-sm-6 BOTTOM RIGHT" style="padding: 2%;">
+        <div class="col-xs-12 col-sm-6" style="padding: 2%;">
           <div class="shadow-5">
             <q-card bordered class="cbg">
               <q-tooltip transition-show="flip-right" transition-hide="flip-left">
                 Current number of blocks needed between rewards withdrawals
               </q-tooltip>
               <q-card-section class="b">
-                Reward Window
+                Stake Removal Window | Pending Rewards Window (blocks)
               </q-card-section>
               <q-card-section class="q-pt-none">
-                {{ rewardsWindow.toLocaleString() }}
+                13000 | {{ rewardsWindow.toLocaleString() }}
               </q-card-section>
             </q-card>
           </div>
@@ -71,11 +71,18 @@
                 Number of blocks blocks until you can withdraw.
               </q-tooltip>
               <q-card-section class="b">
-                Withdrawal Availability
+                Stake Unlock Height | Rewards Unlock Height
               </q-card-section>
+              <div v-if="isStakeholder === true">
               <q-card-section class="q-pt-none">
                 {{ lastWdheight.toLocaleString() }}
               </q-card-section>
+              </div>
+              <div v-if="isStakeholder === false">
+              <q-card-section class="q-pt-none">
+                0 | 0
+              </q-card-section>
+              </div>
             </q-card>
           </div>
         </div>
@@ -105,6 +112,16 @@
                     ENGAGE!
                   </q-tooltip>
                 </q-btn>
+                <div class="text-center">
+                    <br>
+                    <q-banner inline-actions class="text-white bg-red">
+                    Stake lock Period is 13000 blocks (48 hours).  This is reset every
+                    <br>
+                    Time you withdraw pending rewards or remove stake. Pending rewards
+                    <br>
+                    are also withdrawn when removing stake.
+                    </q-banner>
+                  </div>
               </q-card-section>
             </q-card>
           </div>
@@ -173,6 +190,16 @@
                       GIMME DAT SWEET REWARD
                     </q-tooltip>
                   </q-btn>
+                  <div class="text-center">
+                    <br>
+                    <q-banner inline-actions class="text-white bg-red">
+                    Stake lock Period is 13000 blocks (48 hours).  This is reset every
+                    <br>
+                    Time you withdraw pending rewards or remove stake. Pending rewards
+                    <br>
+                    are also withdrawn when removing stake.
+                    </q-banner>
+                  </div>
                 </q-card-section>
               </q-card>
             </div>
@@ -244,7 +271,7 @@ if (!ethEnabled()) {
   alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
 }
 
-const stakingAddress = '0x5Fc32B4Ae08010BB332f0D42Fa24ff81A7c7A501';
+const stakingAddress = '0x4d1c6fe8cce907ac9d884b7562452467f5c7ea3f';
 const staking = new window.web3.eth.Contract(ABI, stakingAddress);
 
 export default {
@@ -321,18 +348,18 @@ export default {
       staking.methods.lastWdHeight().call({
         from: userAccount[0],
       }).then((response) => {
-        const lastWithdraw = response;
+        const lastWithdraw = +response + 13000;
+        const rewardsUnlock = +response + 6500;
         window.web3.eth.getBlockNumber().then((blockHeight) => {
           const currentBlock = blockHeight;
           const withdrawable = currentBlock - lastWithdraw;
           if (withdrawable === currentBlock) {
             this.lastWdheight = 'Nothing Staked';
           } else if (withdrawable > this.rewardsWindow) {
-            this.lastWdheight = 'Withdrawal Available';
+            this.lastWdheight = `${lastWithdraw} | ${rewardsUnlock}`;
             this.$q.notify('You Have a withdrawal Available');
           } else {
-            const remaining = this.rewardsWindow - withdrawable;
-            this.lastWdheight = `${remaining} blocks.`;
+            this.lastWdheight = `${lastWithdraw} | ${rewardsUnlock}`;
           }
         });
       });
