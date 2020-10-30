@@ -144,7 +144,7 @@ export default {
       });
     },
     async calculateStake() {
-      const dailyReward = this.amountOfStake / 5000;
+      const dailyReward = this.amountOfStake / 500;
       this.finalReward = dailyReward * this.days;
       this.rewardUsd = this.finalReward * this.price;
       this.showReward = true;
