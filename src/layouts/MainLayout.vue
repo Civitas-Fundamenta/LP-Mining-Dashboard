@@ -66,6 +66,17 @@
             </q-item>
           </router-link>
           <q-separator />
+          <router-link to="/Stats">
+            <q-item v-ripple>
+              <q-item-section avatar>
+                <q-icon name="fas fa-hammer" />
+              </q-item-section>
+              <q-item-section>
+                Stats and Tools
+              </q-item-section>
+            </q-item>
+          </router-link>
+          <q-separator />
 
         </q-list>
       </q-scroll-area>
