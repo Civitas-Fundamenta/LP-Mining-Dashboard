@@ -142,13 +142,20 @@
                   <q-input dark color="white" v-model="addStakeAmount" type="number" max="30000" label="Enter Amount to Stake" />
                 </q-card-section>
 
+                <div v-if="pendingRewards != 0">
+                    <q-banner inline-actions class="text-white bg-red">
+                    MUST WITHDRAW PENDING REWARDS TO ADD TO STAKED POSITION
+                    </q-banner>
+                </div>
+                <div v-else>
                 <q-card-section>
-                  <q-btn style="background: #93979A" @click="addStake" text-color="white" label="Add Stake">
+                  <q-btn  style="background: #93979A" @click="addStake" text-color="white" label="Add Stake">
                     <q-tooltip anchor="bottom left" self="top middle" transition-show="flip-right" transition-hide="flip-left">
                       Add a new staking position!. Stake Cap is {{ stakeCap.toLocaleString() }}
                     </q-tooltip>
                   </q-btn>
                 </q-card-section>
+                </div>
               </q-card>
             </div>
           </div>
