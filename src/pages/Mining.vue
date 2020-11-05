@@ -76,6 +76,11 @@
               We Couldn't Find Any Open Positions.
             </q-banner>
           </q-card-section>
+          <q-card-section>
+            <q-banner inline-actions class="text-white bg-red">
+              WITHDRAW YEILD ONLY AND WITHDRAW AND ADD WILL RELOCK YOUR POSITION FOR THE SAME PERIOD IT WAS PREVIOUSLY LOCKED FOR
+            </q-banner>
+          </q-card-section>
         </q-card>
       </div>
     </div>
