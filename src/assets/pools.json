@@ -1,6 +1,11 @@
 [{
   "label": "FMTA/USDC",
-  "pid": "0",
+  "pid": 0,
   "tokenGeneric": "Uniswap V2 LP Token",
   "address": "0xB187c8E40b46Ae8fc19A6cC24bb60320a73b9abD"
+}, {
+  "label": "FMTA/ETH",
+  "pid": 0,
+  "tokenGeneric": "Uniswap V2 LP Token",
+  "address": "0xF6de2B6eAB93d3A0AEC5863e3190b319602A1e70"
 }]
