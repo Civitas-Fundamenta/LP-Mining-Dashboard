@@ -78,7 +78,7 @@
           </q-card-section>
           <q-card-section>
             <q-banner inline-actions class="text-white bg-red">
-              WITHDRAW YEILD ONLY AND WITHDRAW AND ADD WILL RELOCK YOUR POSITION FOR THE SAME PERIOD IT WAS PREVIOUSLY LOCKED FOR
+              WITHDRAW YIELD ONLY AND WITHDRAW AND ADD WILL RELOCK YOUR POSITION FOR THE SAME PERIOD IT WAS PREVIOUSLY LOCKED FOR
             </q-banner>
           </q-card-section>
         </q-card>
@@ -169,24 +169,26 @@ export default {
           amountInt
         );
         const poolAddress = this.tokenOptions.address;
-        if (this.tokenOptions.pid === 0) {
+        if (this.tokenOptions.label === "FMTA/USDC") {
           this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
           this.contract = new window.web3.eth.Contract(usABI, this.contractAddress);
           this.uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb"; // USDC/FMTA Pool UNI-V2 Token
           this.uniswapETHFTMAContract = new window.web3.eth.Contract(
             uniswapETHFTMAABI,
-            uniswapETHFTMA
+            this.uniswapETHFTMA
           );
+          console.log(this.uniswapETHFTMAContract);
         } else {
           this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
           this.contract = new window.web3.eth.Contract(ethABI, this.contractAddress);
           this.uniswapETHFTMA = "0x70b5E59cE4Ef71baa17eF50763D4fE31Beb39465"; // ETH/FMTA Pool UNI-V2 Token
           this.uniswapETHFTMAContract = new window.web3.eth.Contract(
             uniswapETHABI,
-            uniswapETHFTMA
+            this.uniswapETHFTMA
           );
+          console.log(this.uniswapETHFTMAContract);
         }
-        uniswapETHFTMAContract.methods
+        this.uniswapETHFTMAContract.methods
           .approve(poolAddress, amount)
           .send({
             from: userAccount[0]
@@ -196,7 +198,7 @@ export default {
       }
     },
     async createPosition() {
-      if (this.tokenOptions.pid === 0) {
+      if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
         this.contract = new window.web3.eth.Contract(usABI, this.contractAddress);
       } else {
@@ -227,7 +229,7 @@ export default {
         })
     },
     async selectPool() {
-      if (this.tokenOptions.pid === 0) {
+      if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
         this.contract = new window.web3.eth.Contract(usABI, this.contractAddress);
       } else {
@@ -276,7 +278,7 @@ export default {
         "uint256",
         amountToWithdraw
       );
-      if (this.tokenOptions.pid === 0) {
+      if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
         this.contract = new window.web3.eth.Contract(usABI, this.contractAddress);
         this.uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb"; // USDC/FMTA Pool UNI-V2 Token
@@ -306,7 +308,7 @@ export default {
         });
     },
     async withdrawOnly() {
-      if (this.tokenOptions.pid === 0) {
+      if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
         this.contract = new window.web3.eth.Contract(usABI, this.contractAddress);
       } else {
@@ -333,7 +335,7 @@ export default {
         })
     },
     async removeEntirePosition() {
-      if (this.tokenOptions.pid === 0) {
+      if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
         this.contract = new window.web3.eth.Contract(usABI, this.contractAddress);
       } else {
