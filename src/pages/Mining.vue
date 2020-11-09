@@ -284,7 +284,7 @@ export default {
         this.uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb"; // USDC/FMTA Pool UNI-V2 Token
         this.uniswapETHFTMAContract = new window.web3.eth.Contract(
           uniswapETHFTMAABI,
-          uniswapETHFTMA
+          this.uniswapETHFTMA
         );
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
@@ -292,11 +292,11 @@ export default {
         this.uniswapETHFTMA = "0x70b5E59cE4Ef71baa17eF50763D4fE31Beb39465"; // ETH/FMTA Pool UNI-V2 Token
         this.uniswapETHFTMAContract = new window.web3.eth.Contract(
           uniswapETHABI,
-          uniswapETHFTMA
+          this.uniswapETHFTMA
         );
       }
-      uniswapETHFTMAContract.methods
-        .approve(this.tokenOptions.poolAddress, amount)
+      this.uniswapETHFTMAContract.methods
+        .approve(this.tokenOptions.address, amount)
         .send({
           from: userAccount[0]
         }).then((receipt) => {
