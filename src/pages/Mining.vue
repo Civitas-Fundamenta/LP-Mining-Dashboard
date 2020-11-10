@@ -300,12 +300,35 @@ export default {
         .send({
           from: userAccount[0]
         }).then((receipt) => {
-          this.contract.methods
-            .withdrawAccruedYieldAndAdd(poolId, amount)
-            .send({
-              from: userAccount[0]
-            })
+          this.withdrawFinal();
         });
+    },
+    async withdrawFinal() {
+      const provider = await detectEthereumProvider();
+      const poolId = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        this.tokenOptions.pid
+      );
+      const userAccount = await provider.request({
+        method: "eth_requestAccounts"
+      });
+      const amountToWithdraw = window.web3.utils.toWei(this.withdrawAmount, "ether");
+      const amount = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        amountToWithdraw
+      );
+      if (this.tokenOptions.label === "FMTA/USDC") {
+        this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
+        this.contract = new window.web3.eth.Contract(usABI, this.contractAddress);
+      } else {
+        this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
+        this.contract = new window.web3.eth.Contract(ethABI, this.contractAddress);
+      }
+      this.contract.methods
+        .withdrawAccruedYieldAndAdd(poolId, amount)
+        .send({
+          from: userAccount[0]
+        })
     },
     async withdrawOnly() {
       if (this.tokenOptions.label === "FMTA/USDC") {
