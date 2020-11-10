@@ -181,7 +181,7 @@ export default {
         } else {
           this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
           this.contract = new window.web3.eth.Contract(ethABI, this.contractAddress);
-          this.uniswapETHFTMA = "0x70b5E59cE4Ef71baa17eF50763D4fE31Beb39465"; // ETH/FMTA Pool UNI-V2 Token
+          this.uniswapETHFTMA = "0x8f6BcB61836F43cFDb7DE46e2244d363D90527Ef"; // ETH/FMTA Pool UNI-V2 Token
           this.uniswapETHFTMAContract = new window.web3.eth.Contract(
             uniswapETHABI,
             this.uniswapETHFTMA
@@ -289,7 +289,7 @@ export default {
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
         this.contract = new window.web3.eth.Contract(ethABI, this.contractAddress);
-        this.uniswapETHFTMA = "0x70b5E59cE4Ef71baa17eF50763D4fE31Beb39465"; // ETH/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMA = "0x8f6BcB61836F43cFDb7DE46e2244d363D90527Ef"; // ETH/FMTA Pool UNI-V2 Token
         this.uniswapETHFTMAContract = new window.web3.eth.Contract(
           uniswapETHABI,
           this.uniswapETHFTMA
