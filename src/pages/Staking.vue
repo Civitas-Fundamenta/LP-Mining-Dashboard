@@ -360,13 +360,16 @@ export default {
         window.web3.eth.getBlockNumber().then((blockHeight) => {
           const currentBlock = blockHeight;
           const withdrawable = currentBlock - lastWithdraw;
+          const sWithdrawable = lastWithdraw - currentBlock;
+          const rWithdrawable = rewardsUnlock - currentBlock;
           if (withdrawable === currentBlock) {
             this.lastWdheight = 'Nothing Staked';
-          } else if (withdrawable > this.rewardsWindow) {
-            this.lastWdheight = `${lastWithdraw} | ${rewardsUnlock}`;
-            this.$q.notify('You Have a withdrawal Available');
+          } else if (rWithdrawable < 1 && sWithdrawable < 1) {
+            this.lastWdheight = 'Unlocked | Unlocked';
+          } else if (rWithdrawable < 1) {
+            this.lastWdheight = `${lastWithdraw - currentBlock} | Unlocked`;
           } else {
-            this.lastWdheight = `${lastWithdraw} | ${rewardsUnlock}`;
+            this.lastWdheight = `${lastWithdraw - currentBlock} | ${rewardsUnlock - currentBlock}`;
           }
         });
       });
