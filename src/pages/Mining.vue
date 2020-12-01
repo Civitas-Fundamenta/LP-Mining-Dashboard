@@ -50,7 +50,7 @@
             <q-card class="my-card cbg">
               <q-card-section class="bg-primary text-white">
                 <div class="text-h6">Current Position:</div>
-                <div class="text-subtitle2">Unlock Height: {{ UnlockHeight }} | Locked: {{ LockedAmount }} LP Tokens</div>
+                <div class="text-subtitle2">Unlock Height: {{ countDown }} | Locked: {{ LockedAmount }} LP Tokens</div>
                 <div class="text-subtitle2">Lock Period: {{ Days }} Days | DPY (User BP): {{ UserBP}} </div>
                 <div class="text-subtitle2">Total Rewards Paid: {{ TotalRewardsPaid }} FMTA</div>
               </q-card-section>
@@ -135,6 +135,7 @@ export default {
       uniswapETHFTMAContract: "",
       contractAddress: "",
       contract: "",
+      countDown: "",
     };
   },
   created() {
@@ -228,6 +229,33 @@ export default {
           from: userAccount[0]
         })
     },
+    async countDownFunc() {
+      const provider = await detectEthereumProvider();
+      const poolId = window.web3.eth.abi.encodeParameter(
+        "uint256",
+        this.tokenOptions.pid
+      );
+      const userAccount = await provider.request({
+        method: "eth_requestAccounts"
+      });
+      this.contract.methods
+        .hasPosition(userAccount[0], poolId)
+        .call({
+          from: userAccount[0]
+        }).then((receipt) => {
+          this.HasPosition = receipt;
+          this.contract.methods
+            .provider(poolId, userAccount[0])
+            .call().then(response => {
+              this.UnlockHeight = response.UnlockHeight;
+              window.web3.eth.getBlockNumber().then((blockHeight) => {
+                const currentBlock = blockHeight;
+                this.countDown = this.UnlockHeight - currentBlock;
+                console.info(this.countDown);
+              });
+            });
+        });
+    },
     async selectPool() {
       if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
@@ -253,13 +281,15 @@ export default {
           this.contract.methods
             .provider(poolId, userAccount[0])
             .call().then(response => {
-              this.UnlockHeight = response.UnlockHeight;
               this.LockedAmount = (response.LockedAmount / 1000000000000000000);
               this.Days = response.Days;
               this.UserBP = response.UserBP;
               this.TotalRewardsPaid = (response.TotalRewardsPaid / 1000000000000000000);
             });
         });
+        setInterval(() => {
+          this.countDownFunc();
+        }, 3000);
     },
     async withdrawAndAdd() {
       this.withdrew = true;
