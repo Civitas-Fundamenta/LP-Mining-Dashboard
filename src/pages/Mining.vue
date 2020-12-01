@@ -289,7 +289,7 @@ export default {
         });
         setInterval(() => {
           this.countDownFunc();
-        }, 3000);
+        }, 15000);
     },
     async withdrawAndAdd() {
       this.withdrew = true;
