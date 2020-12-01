@@ -135,7 +135,7 @@ export default {
       uniswapETHFTMAContract: "",
       contractAddress: "",
       contract: "",
-      countDown: "",
+      countDown: "Loading...",
     };
   },
   created() {
@@ -251,6 +251,9 @@ export default {
               window.web3.eth.getBlockNumber().then((blockHeight) => {
                 const currentBlock = blockHeight;
                 this.countDown = this.UnlockHeight - currentBlock;
+                if (this.countDown < 0) {
+                  this.countDown = 'Unlocked'
+                }
                 console.info(this.countDown);
               });
             });
