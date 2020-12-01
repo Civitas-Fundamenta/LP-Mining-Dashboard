@@ -62,6 +62,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'prefer-promise-reject-errors': 'off',
     'max-len': 'off',
+    'linebreak-style': 'off',
 
 
     // allow debugger during development only
