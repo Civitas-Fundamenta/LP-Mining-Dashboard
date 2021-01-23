@@ -37,7 +37,7 @@
           <q-card-section class="q-pt-none">
             <div class="row text-center">
               <q-input filled v-model="amountOfStake" class="col-xs-6 col-sm-6" label="Enter Amount of FMTA to Stake" max="30" dark />
-              <q-input filled v-model="days" class="col-xs-3 col-sm-3" style="margin-left: 2%;" label="The Amount of Days to stake for" dark :dense="dense" />
+              <q-input filled v-model="days" class="col-xs-3 col-sm-3" style="margin-left: 2%;" label="The Amount of Days to stake for" dark />
               <q-btn style="background: #93979A; margin-left: 2%;" class="col-xs-2 col-sm-2" @click="calculateStake" text-color="white" label="Calculate"></q-btn>
               <div v-if="showReward === true" class="col-xs-12 col-sm-12">
                 <br>

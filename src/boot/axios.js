@@ -5,7 +5,7 @@ import Web3 from 'web3';
 const API = {};
 
 API.Web3 = new Web3(
-  new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/9b35dedcca93433d8cba4b8dd762ed45'),
+  new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/7921c78422994d2f82ac15663d975937'),
 );
 
 Vue.prototype.$API = API;
