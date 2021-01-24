@@ -74,14 +74,14 @@
                 Stake Unlock Height | Rewards Unlock Height
               </q-card-section>
               <div v-if="isStakeholder === true">
-              <q-card-section class="q-pt-none">
-                {{ lastWdheight.toLocaleString() }}
-              </q-card-section>
+                <q-card-section class="q-pt-none">
+                  {{ lastWdheight.toLocaleString() }}
+                </q-card-section>
               </div>
               <div v-if="isStakeholder === false">
-              <q-card-section class="q-pt-none">
-                0 | 0
-              </q-card-section>
+                <q-card-section class="q-pt-none">
+                  0 | 0
+                </q-card-section>
               </div>
             </q-card>
           </div>
@@ -113,15 +113,15 @@
                   </q-tooltip>
                 </q-btn>
                 <div class="text-center">
-                    <br>
-                    <q-banner inline-actions class="text-white bg-red">
-                    Stake lock Period is 13000 blocks (48 hours).  This is reset every
+                  <br>
+                  <q-banner inline-actions class="text-white bg-red">
+                    Stake lock Period is 13000 blocks (48 hours). This is reset every
                     <br>
                     Time you withdraw pending rewards or remove stake. Pending rewards
                     <br>
                     are also withdrawn when removing stake.
-                    </q-banner>
-                  </div>
+                  </q-banner>
+                </div>
               </q-card-section>
             </q-card>
           </div>
@@ -200,11 +200,11 @@
                   <div class="text-center">
                     <br>
                     <q-banner inline-actions class="text-white bg-red">
-                    Stake lock Period is 13000 blocks (48 hours).  This is reset every
-                    <br>
-                    Time you withdraw pending rewards or remove stake. Pending rewards
-                    <br>
-                    are also withdrawn when removing stake.
+                      Stake lock Period is 13000 blocks (48 hours). This is reset every
+                      <br>
+                      Time you withdraw pending rewards or remove stake. Pending rewards
+                      <br>
+                      are also withdrawn when removing stake.
                     </q-banner>
                   </div>
                 </q-card-section>
@@ -297,12 +297,11 @@ export default {
       lastWdheight: '',
       removeStakeAmount: null,
       pendingRewards: '',
+      withdrawable: '',
     };
   },
   created() {
     this.CheckChainData();
-    this.checkForWithdraw();
-    setInterval(this.checkForWithdraw, 60 * 1000);
   },
   methods: {
     async CheckChainData() {
@@ -328,7 +327,7 @@ export default {
         });
         staking.methods.isStakeholder(userAccount[0]).call().then((response) => {
           // eslint-disable-next-line
-            this.isStakeholder = response[0];
+          this.isStakeholder = response[0];
           if (this.isStakeholder === true) {
             staking.methods.totalRewardsOf(userAccount[0]).call().then((respond) => {
               this.rewardCalc = (respond / 1000000000000000000);
@@ -341,6 +340,10 @@ export default {
             }).then((resp) => {
               this.pendingRewards = (resp / 1000000000000000000);
             });
+            this.checkForWithdraw();
+            setInterval(this.checkForWithdraw, 60 * 1000);
+          } else {
+            this.withdrawable = 0;
           }
         });
       } else {
@@ -355,8 +358,8 @@ export default {
       staking.methods.lastWdHeight().call({
         from: userAccount[0],
       }).then((response) => {
-        const lastWithdraw = +response + 13000;
-        const rewardsUnlock = +response + 6500;
+        const lastWithdraw = response + 13000;
+        const rewardsUnlock = response + 6500;
         window.web3.eth.getBlockNumber().then((blockHeight) => {
           const currentBlock = blockHeight;
           const withdrawable = currentBlock - lastWithdraw;
