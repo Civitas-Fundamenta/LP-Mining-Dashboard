@@ -119,6 +119,6 @@ export default {
 </script>
 <style>
 .bg {
-  background-image: url(../assets/gm2.jpg);
+  background-color: black;
 }
 </style>

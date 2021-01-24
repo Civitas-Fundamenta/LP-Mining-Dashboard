@@ -6,7 +6,7 @@
   <div v-if="paused === false">
     <div class="row text-center">
       <div class="col-xs-12 col-sm-6" style="padding: 2%;">
-        <q-card class="cbg">
+        <q-card bordered class="cbg">
           <q-card-section>
             <div class="text-h6">Open A Position</div>
           </q-card-section>

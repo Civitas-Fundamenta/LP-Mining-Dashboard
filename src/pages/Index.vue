@@ -2,7 +2,7 @@
 <q-page>
     <div class="row text-center">
       <div class="col-xs-12 col-sm-6" style="padding: 2%;">
-        <q-card class="cbg">
+        <q-card flat bordered class="cbg">
           <i class="fas fa-coins fa-10x" style="padding: 25%;"></i>
           <q-card-section>
             <a href="/#/Mining">

@@ -3,7 +3,7 @@
   <div>
     <div class="row text-center">
       <div class="col-xs-12 col-sm-6" style="padding: 2%;">
-        <q-card class="cbg">
+        <q-card bordered class="cbg">
           <q-card-section>
             <div class="text-h6">Market Cap (USD)</div>
           </q-card-section>
@@ -15,7 +15,7 @@
         </q-card>
       </div>
       <div class="col-xs-12 col-sm-6" style="padding: 2%;">
-        <q-card class="cbg">
+        <q-card bordered class="cbg">
           <q-card-section>
             <div class="text-h6">Circulating Supply</div>
           </q-card-section>
@@ -29,7 +29,7 @@
     </div>
     <div class="row text-center">
       <div class="col-xs-12 col-sm-12" style="padding: 2%;">
-        <q-card class="cbg">
+        <q-card bordered class="cbg">
           <q-card-section>
             <div class="text-h6">Daily Staking Reward Calculator:</div>
           </q-card-section>
