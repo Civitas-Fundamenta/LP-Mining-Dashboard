@@ -14,19 +14,7 @@
         </q-toolbar-title>
 
         <div>
-          <MetamaskChecker>
-            <div id="err" slot="errored" slot-scope="{ error }">
-              {{ error.message || 'Unexpected error' }}
-            </div>
-
-            <div id="app" slot="checked" slot-scope="{ provider, selectedAccount, selectedNetwork }">
-              Active Account: {{ selectedAccount }} On Network ID: {{ selectedNetwork }}
-            </div>
-
-            <div id="loader">
-              Loading Data
-            </div>
-          </MetamaskChecker>
+          {{ userAddy[0] }}
         </div>
       </q-toolbar>
     </q-header>
@@ -66,6 +54,17 @@
             </q-item>
           </router-link>
           <q-separator />
+          <router-link to="/Stats">
+            <q-item v-ripple>
+              <q-item-section avatar>
+                <q-icon name="fas fa-hammer" />
+              </q-item-section>
+              <q-item-section>
+                Stats and Tools
+              </q-item-section>
+            </q-item>
+          </router-link>
+          <q-separator />
 
         </q-list>
       </q-scroll-area>
@@ -78,17 +77,43 @@
 </template>
 
 <script>
-import MetamaskChecker from '@metamask-checker/vue';
+import detectEthereumProvider from '@metamask/detect-provider';
+import Web3 from 'web3';
+
+const ethEnabled = () => {
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    window.ethereum.enable();
+    return true;
+  }
+  return false;
+};
+if (!ethEnabled()) {
+  alert(
+    'Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!',
+  );
+}
 
 export default {
   name: 'MainLayout',
-  components: {
-    MetamaskChecker,
-  },
   data() {
     return {
       drawer: false,
+      userAddy: [],
     };
+  },
+  mounted() {
+    this.getWallet();
+  },
+  methods: {
+    async getWallet() {
+      const provider = await detectEthereumProvider();
+      if (provider) {
+        this.userAddy = await provider.request({
+          method: 'eth_requestAccounts',
+        });
+      }
+    },
   },
 };
 </script>
