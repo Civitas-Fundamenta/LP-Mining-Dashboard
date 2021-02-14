@@ -42,7 +42,7 @@
           </q-card-section>
           <q-card-section class="q-pt-none">
             <q-select filled v-model="tokenOptions" dark color="white" :options="tokens" label="Select Pool" />
-            <br>
+            <br />
             <q-btn color="white" @click="selectPool" text-color="black" label="Look For Open Positions" />
           </q-card-section>
           <!-- Has A Position -->
@@ -50,9 +50,16 @@
             <q-card class="my-card cbg">
               <q-card-section class="bg-primary text-white">
                 <div class="text-h6">Current Position:</div>
-                <div class="text-subtitle2">Unlock Height: {{ countDown }} | Locked: {{ LockedAmount }} LP Tokens</div>
-                <div class="text-subtitle2">Lock Period: {{ Days }} Days | DPY (User BP): {{ UserBP}} </div>
-                <div class="text-subtitle2">Total Rewards Paid: {{ TotalRewardsPaid }} FMTA</div>
+                <div class="text-subtitle2">
+                  Unlock Height: {{ countDown }} | Locked:
+                  {{ LockedAmount }} LP Tokens
+                </div>
+                <div class="text-subtitle2">
+                  Lock Period: {{ Days }} Days | DPY (User BP): {{ UserBP }}
+                </div>
+                <div class="text-subtitle2">
+                  Total Rewards Paid: {{ TotalRewardsPaid }} FMTA
+                </div>
               </q-card-section>
 
               <q-separator />
@@ -67,7 +74,6 @@
                 <q-input v-model="withdrawAmount" type="number" dark label-color="white" color="white" label="Enter Amount to Add" />
                 <q-btn text-color="black" color="white" @click="finalWithdraw" label="Approve" />
               </q-card-section>
-
             </q-card>
           </q-card-section>
           <!-- No Position -->
@@ -78,7 +84,8 @@
           </q-card-section>
           <q-card-section>
             <q-banner inline-actions class="text-white bg-red">
-              WITHDRAW YIELD ONLY AND WITHDRAW AND ADD WILL RELOCK YOUR POSITION FOR THE SAME PERIOD IT WAS PREVIOUSLY LOCKED FOR
+              WITHDRAW YIELD ONLY AND WITHDRAW AND ADD WILL RELOCK YOUR
+              POSITION FOR THE SAME PERIOD IT WAS PREVIOUSLY LOCKED FOR
             </q-banner>
           </q-card-section>
         </q-card>
@@ -120,81 +127,92 @@ export default {
       contractAddress: "",
       contract: "",
       countDown: "Loading...",
+      userAccount: []
     };
   },
-  created() {
-    this.CheckChainData();
+  mounted() {
+    // do something after mounting vue instance
+    this.init();
   },
   methods: {
+    async init() {
+      await this.$API.onboard.walletSelect();
+      await this.$API.onboard.walletCheck();
+      this.userAccount = await this.$API.web3.eth.getAccounts();
+      this.CheckChainData();
+    },
     async CheckChainData() {
       this.contractAddress = "0xF6de2B6eAB93d3A0AEC5863e3190b319602A1e70"; // Liquidity Mining Contract
-      this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
-      const provider = await detectEthereumProvider();
-      if (provider) {
-        const userAccount = await provider.request({
-          method: "eth_requestAccounts"
+      this.contract = new this.$API.web3.eth.Contract(
+        ethABI,
+        this.contractAddress
+      );
+      this.contract.methods
+        .paused()
+        .call()
+        .then(response => {
+          this.paused = response;
         });
-        this.contract.methods
-          .paused()
-          .call()
-          .then(response => {
-            this.paused = response;
-          });
-      }
     },
     async getApproval() {
-      const provider = await detectEthereumProvider();
-      if (provider) {
-        const userAccount = await provider.request({
-          method: "eth_requestAccounts"
-        });
-        const amountInt = this.$API.web3.utils.toWei(this.positionAmount, "ether");
-        const amount = this.$API.web3.eth.abi.encodeParameter(
-          "uint256",
-          amountInt
+      const amountInt = this.$API.web3.utils.toWei(
+        this.positionAmount,
+        "ether"
+      );
+      const amount = this.$API.web3.eth.abi.encodeParameter(
+        "uint256",
+        amountInt
+      );
+      const poolAddress = this.tokenOptions.address;
+      if (this.tokenOptions.label === "FMTA/USDC") {
+        this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
+        this.contract = new this.$API.web3.eth.Contract(
+          usABI,
+          this.contractAddress
         );
-        const poolAddress = this.tokenOptions.address;
-        if (this.tokenOptions.label === "FMTA/USDC") {
-          this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-          this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
-          this.uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb"; // USDC/FMTA Pool UNI-V2 Token
-          this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(
-            uniswapETHFTMAABI,
-            this.uniswapETHFTMA
-          );
-          console.log(this.uniswapETHFTMAContract);
-        } else {
-          this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-          this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
-          this.uniswapETHFTMA = "0x8f6BcB61836F43cFDb7DE46e2244d363D90527Ef"; // ETH/FMTA Pool UNI-V2 Token
-          this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(
-            uniswapETHABI,
-            this.uniswapETHFTMA
-          );
-          console.log(this.uniswapETHFTMAContract);
-        }
-        this.uniswapETHFTMAContract.methods
-          .approve(poolAddress, amount)
-          .send({
-            from: userAccount[0]
-          }).then((receipt) => {
-            this.$q.notify(`Stake Added - Transaction Hash: ${receipt.hash}`);
-          });
+        this.uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb"; // USDC/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(
+          uniswapETHFTMAABI,
+          this.uniswapETHFTMA
+        );
+        console.log(this.uniswapETHFTMAContract);
+      } else {
+        this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
+        this.contract = new this.$API.web3.eth.Contract(
+          ethABI,
+          this.contractAddress
+        );
+        this.uniswapETHFTMA = "0x8f6BcB61836F43cFDb7DE46e2244d363D90527Ef"; // ETH/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(
+          uniswapETHABI,
+          this.uniswapETHFTMA
+        );
+        console.log(this.uniswapETHFTMAContract);
       }
+      this.uniswapETHFTMAContract.methods.approve(poolAddress, amount).send({
+        from: this.userAccount[0]
+      }).then(receipt => {
+        this.$q.notify(`Stake Added - Transaction Hash: ${receipt.hash}`);
+      });
     },
     async createPosition() {
       if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          usABI,
+          this.contractAddress
+        );
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          ethABI,
+          this.contractAddress
+        );
       }
-      const provider = await detectEthereumProvider();
-      const userAccount = await provider.request({
-        method: "eth_requestAccounts"
-      });
-      const amountInt = this.$API.web3.utils.toWei(this.positionAmount, "ether");
+      const amountInt = this.$API.web3.utils.toWei(
+        this.positionAmount,
+        "ether"
+      );
       const amount = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         amountInt
@@ -207,36 +225,32 @@ export default {
         "uint256",
         this.lockPeriod
       );
-      this.contract.methods
-        .addPosition(amount, lockInPeriod, poolId)
-        .send({
-          from: userAccount[0]
-        })
+      this.contract.methods.addPosition(amount, lockInPeriod, poolId).send({
+        from: this.userAccount[0]
+      });
     },
     async countDownFunc() {
-      const provider = await detectEthereumProvider();
       const poolId = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         this.tokenOptions.pid
       );
-      const userAccount = await provider.request({
-        method: "eth_requestAccounts"
-      });
       this.contract.methods
-        .hasPosition(userAccount[0], poolId)
+        .hasPosition(this.userAccount[0], poolId)
         .call({
-          from: userAccount[0]
-        }).then((receipt) => {
+          from: this.userAccount[0]
+        })
+        .then(receipt => {
           this.HasPosition = receipt;
           this.contract.methods
-            .provider(poolId, userAccount[0])
-            .call().then(response => {
+            .provider(poolId, this.userAccount[0])
+            .call()
+            .then(response => {
               this.UnlockHeight = response.UnlockHeight;
-              this.$API.web3.eth.getBlockNumber().then((blockHeight) => {
+              this.$API.web3.eth.getBlockNumber().then(blockHeight => {
                 const currentBlock = blockHeight;
                 this.countDown = this.UnlockHeight - currentBlock;
                 if (this.countDown < 0) {
-                  this.countDown = 'Unlocked'
+                  this.countDown = "Unlocked";
                 }
                 console.info(this.countDown);
               });
@@ -246,58 +260,65 @@ export default {
     async selectPool() {
       if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          usABI,
+          this.contractAddress
+        );
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          ethABI,
+          this.contractAddress
+        );
       }
-      const provider = await detectEthereumProvider();
       const poolId = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         this.tokenOptions.pid
       );
-      const userAccount = await provider.request({
-        method: "eth_requestAccounts"
-      });
       this.contract.methods
-        .hasPosition(userAccount[0], poolId)
+        .hasPosition(this.userAccount[0], poolId)
         .call({
-          from: userAccount[0]
-        }).then((receipt) => {
+          from: this.userAccount[0]
+        })
+        .then(receipt => {
           this.HasPosition = receipt;
           this.contract.methods
-            .provider(poolId, userAccount[0])
-            .call().then(response => {
-              this.LockedAmount = (response.LockedAmount / 1000000000000000000);
+            .provider(poolId, this.userAccount[0])
+            .call()
+            .then(response => {
+              this.LockedAmount = response.LockedAmount / 1000000000000000000;
               this.Days = response.Days;
               this.UserBP = response.UserBP;
-              this.TotalRewardsPaid = (response.TotalRewardsPaid / 1000000000000000000);
+              this.TotalRewardsPaid =
+                response.TotalRewardsPaid / 1000000000000000000;
             });
         });
-        setInterval(() => {
-          this.countDownFunc();
-        }, 15000);
+      setInterval(() => {
+        this.countDownFunc();
+      }, 15000);
     },
     async withdrawAndAdd() {
       this.withdrew = true;
     },
     async finalWithdraw() {
-      const provider = await detectEthereumProvider();
       const poolId = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         this.tokenOptions.pid
       );
-      const userAccount = await provider.request({
-        method: "eth_requestAccounts"
-      });
-      const amountToWithdraw = this.$API.web3.utils.toWei(this.withdrawAmount, "ether");
+      const amountToWithdraw = this.$API.web3.utils.toWei(
+        this.withdrawAmount,
+        "ether"
+      );
       const amount = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         amountToWithdraw
       );
       if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          usABI,
+          this.contractAddress
+        );
         this.uniswapETHFTMA = "0x650e8b9d20293a276f76be24da4ce25f2d0090fb"; // USDC/FMTA Pool UNI-V2 Token
         this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(
           uniswapETHFTMAABI,
@@ -305,7 +326,10 @@ export default {
         );
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          ethABI,
+          this.contractAddress
+        );
         this.uniswapETHFTMA = "0x8f6BcB61836F43cFDb7DE46e2244d363D90527Ef"; // ETH/FMTA Pool UNI-V2 Token
         this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(
           uniswapETHABI,
@@ -315,98 +339,102 @@ export default {
       this.uniswapETHFTMAContract.methods
         .approve(this.tokenOptions.address, amount)
         .send({
-          from: userAccount[0]
-        }).then((receipt) => {
+          from: this.userAccount[0]
+        })
+        .then(receipt => {
           this.withdrawFinal();
         });
     },
     async withdrawFinal() {
-      const provider = await detectEthereumProvider();
       const poolId = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         this.tokenOptions.pid
       );
-      const userAccount = await provider.request({
-        method: "eth_requestAccounts"
-      });
-      const amountToWithdraw = this.$API.web3.utils.toWei(this.withdrawAmount, "ether");
+      const amountToWithdraw = this.$API.web3.utils.toWei(
+        this.withdrawAmount,
+        "ether"
+      );
       const amount = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         amountToWithdraw
       );
       if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          usABI,
+          this.contractAddress
+        );
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          ethABI,
+          this.contractAddress
+        );
       }
-      this.contract.methods
-        .withdrawAccruedYieldAndAdd(poolId, amount)
-        .send({
-          from: userAccount[0]
-        })
+      this.contract.methods.withdrawAccruedYieldAndAdd(poolId, amount).send({
+        from: this.userAccount[0]
+      });
     },
     async withdrawOnly() {
       if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          usABI,
+          this.contractAddress
+        );
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          ethABI,
+          this.contractAddress
+        );
       }
-      const provider = await detectEthereumProvider();
       const poolId = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         this.tokenOptions.pid
       );
-      const userAccount = await provider.request({
-        method: "eth_requestAccounts"
-      });
       //const amountToWithdraw = this.$API.web3.utils.toWei(this.withdrawAmount, "ether");
-      const amount = this.$API.web3.eth.abi.encodeParameter(
-        "uint256",
-        0
-      );
-      this.contract.methods
-        .withdrawAccruedYieldAndAdd(poolId, amount)
-        .send({
-          from: userAccount[0]
-        })
+      const amount = this.$API.web3.eth.abi.encodeParameter("uint256", 0);
+      this.contract.methods.withdrawAccruedYieldAndAdd(poolId, amount).send({
+        from: this.userAccount[0]
+      });
     },
     async removeEntirePosition() {
       if (this.tokenOptions.label === "FMTA/USDC") {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          usABI,
+          this.contractAddress
+        );
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
-        this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
+        this.contract = new this.$API.web3.eth.Contract(
+          ethABI,
+          this.contractAddress
+        );
       }
-      const provider = await detectEthereumProvider();
       const poolId = this.$API.web3.eth.abi.encodeParameter(
         "uint256",
         this.tokenOptions.pid
       );
-      const userAccount = await provider.request({
-        method: "eth_requestAccounts"
-      });
       this.contract.methods
-        .provider(poolId, userAccount[0])
-        .call().then(response => {
-          const entirePosition = response.LockedAmount
+        .provider(poolId, this.userAccount[0])
+        .call()
+        .then(response => {
+          const entirePosition = response.LockedAmount;
           const entirePositionFinal = this.$API.web3.eth.abi.encodeParameter(
             "uint256",
             entirePosition
           );
-          console.log(entirePosition + " Entire Position as Wei")
-          console.log(entirePositionFinal + " Entire Position as uint256")
+          console.log(entirePosition + " Entire Position as Wei");
+          console.log(entirePositionFinal + " Entire Position as uint256");
           this.contract.methods
             .removePosition(entirePositionFinal, poolId)
             .send({
-              from: userAccount[0]
-            })
+              from: this.userAccount[0]
+            });
         });
-    },
+    }
   }
 };
 </script>
