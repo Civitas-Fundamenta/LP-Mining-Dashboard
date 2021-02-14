@@ -261,25 +261,9 @@
 </template>
 
 <script>
-import detectEthereumProvider from '@metamask/detect-provider';
-import Web3 from 'web3';
 import ABI from '../assets/staking-abi.json';
 
-const ethEnabled = () => {
-  if (window.ethereum) {
-    window.web3 = new Web3(window.ethereum);
-    window.ethereum.enable();
-    return true;
-  }
-  return false;
-};
-
-if (!ethEnabled()) {
-  alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
-}
-
 const stakingAddress = '0x4d1c6fe8cce907ac9d884b7562452467f5c7ea3f';
-const staking = new window.web3.eth.Contract(ABI, stakingAddress);
 
 export default {
   name: 'PageIndex',
@@ -290,7 +274,7 @@ export default {
       totalStakes: '',
       stakeCap: '',
       isStakeholder: '',
-      rewardCalc: '',
+      rewardCalc: 0,
       stakeOf: '',
       rewardsWindow: '',
       addStakeAmount: '',
@@ -298,69 +282,67 @@ export default {
       removeStakeAmount: null,
       pendingRewards: '',
       withdrawable: '',
+      userAccount: [],
+      staking: {},
     };
   },
-  created() {
-    this.CheckChainData();
+  mounted() {
+    // do something after mounting vue instance
+    this.init();
   },
   methods: {
+    async init() {
+      await this.$API.onboard.walletSelect();
+      await this.$API.onboard.walletCheck();
+      this.userAccount = await this.$API.web3.eth.getAccounts();
+      this.staking = new this.$API.web3.eth.Contract(ABI, stakingAddress);
+      this.CheckChainData();
+    },
     async CheckChainData() {
-      const provider = await detectEthereumProvider();
-      if (provider) {
-        const userAccount = await provider.request({
-          method: 'eth_requestAccounts',
-        });
-        staking.methods.stakingOff().call().then((response) => {
-          this.off = response;
-        });
-        staking.methods.paused().call().then((response) => {
-          this.paused = response;
-        });
-        staking.methods.totalStakes().call().then((response) => {
-          this.totalStakes = (response / 1000000000000000000);
-        });
-        staking.methods.stakeCap().call().then((response) => {
-          this.stakeCap = (response / 1000000000000000000);
-        });
-        staking.methods.rewardsWindow().call().then((response) => {
-          this.rewardsWindow = response;
-        });
-        staking.methods.isStakeholder(userAccount[0]).call().then((response) => {
-          // eslint-disable-next-line
+      this.staking.methods.stakingOff().call().then((response) => {
+        this.off = response;
+      });
+      this.staking.methods.paused().call().then((response) => {
+        this.paused = response;
+      });
+      this.staking.methods.totalStakes().call().then((response) => {
+        this.totalStakes = (response / 1000000000000000000);
+      });
+      this.staking.methods.stakeCap().call().then((response) => {
+        this.stakeCap = (response / 1000000000000000000);
+      });
+      this.staking.methods.rewardsWindow().call().then((response) => {
+        this.rewardsWindow = response;
+      });
+      this.staking.methods.isStakeholder(this.userAccount[0]).call().then((response) => {
+        // eslint-disable-next-line
           this.isStakeholder = response[0];
-          if (this.isStakeholder === true) {
-            staking.methods.totalRewardsOf(userAccount[0]).call().then((respond) => {
-              this.rewardCalc = (respond / 1000000000000000000);
-            });
-            staking.methods.stakeOf(userAccount[0]).call().then((resp) => {
-              this.stakeOf = (resp / 1000000000000000000);
-            });
-            staking.methods.rewardsAccrued().call({
-              from: userAccount[0],
-            }).then((resp) => {
-              this.pendingRewards = (resp / 1000000000000000000);
-            });
-            this.checkForWithdraw();
-            setInterval(this.checkForWithdraw, 60 * 1000);
-          } else {
-            this.withdrawable = 0;
-          }
-        });
-      } else {
-        this.$q.notify('Metamask not dectected. Please Install Metamask.');
-      }
+        if (this.isStakeholder === true) {
+          this.staking.methods.totalRewardsOf(this.userAccount[0]).call().then((respond) => {
+            this.rewardCalc = (respond / 1000000000000000000);
+          });
+          this.staking.methods.stakeOf(this.userAccount[0]).call().then((resp) => {
+            this.stakeOf = (resp / 1000000000000000000);
+          });
+          this.staking.methods.rewardsAccrued().call({
+            from: this.userAccount[0],
+          }).then((resp) => {
+            this.pendingRewards = (resp / 1000000000000000000);
+          });
+          this.checkForWithdraw();
+          setInterval(this.checkForWithdraw, 60 * 1000);
+        } else {
+          this.withdrawable = 0;
+        }
+      });
     },
     async checkForWithdraw() {
-      const provider = await detectEthereumProvider();
-      const userAccount = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-      staking.methods.lastWdHeight().call({
-        from: userAccount[0],
+      this.staking.methods.lastWdHeight().call({
+        from: this.userAccount[0],
       }).then((response) => {
         const lastWithdraw = response + 13000;
         const rewardsUnlock = response + 6500;
-        window.web3.eth.getBlockNumber().then((blockHeight) => {
+        this.$API.web3.eth.getBlockNumber().then((blockHeight) => {
           const currentBlock = blockHeight;
           const withdrawable = currentBlock - lastWithdraw;
           const sWithdrawable = lastWithdraw - currentBlock;
@@ -378,14 +360,10 @@ export default {
       });
     },
     async addStake() {
-      const provider = await detectEthereumProvider();
-      const userAccount = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-      const amountInt = window.web3.utils.toWei(this.addStakeAmount, 'ether');
-      const amount = window.web3.eth.abi.encodeParameter('uint256', amountInt);
-      staking.methods.createStake(amount).send({
-        from: userAccount[0],
+      const amountInt = this.$API.web3.utils.toWei(this.addStakeAmount, 'ether');
+      const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountInt);
+      this.staking.methods.createStake(amount).send({
+        from: this.userAccount[0],
       }).then((response) => {
         const hash = response.transactionHash;
         this.$q.notify(`Stake Added - Transaction Hash: ${hash}`);
@@ -395,14 +373,10 @@ export default {
       });
     },
     async removeStake() {
-      const provider = await detectEthereumProvider();
-      const userAccount = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-      const amountInt = window.web3.utils.toWei(this.removeStakeAmount, 'ether');
-      const amount = window.web3.eth.abi.encodeParameter('uint256', amountInt);
-      staking.methods.removeStake(amount).send({
-        from: userAccount[0],
+      const amountInt = this.$API.web3.utils.toWei(this.removeStakeAmount, 'ether');
+      const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountInt);
+      this.staking.methods.removeStake(amount).send({
+        from: this.userAccount[0],
       }).then((response) => {
         const hash = response.transactionHash;
         this.$q.notify(`Stake Removed - Transaction Hash: ${hash}`);
@@ -412,12 +386,8 @@ export default {
       });
     },
     async withdrawStake() {
-      const provider = await detectEthereumProvider();
-      const userAccount = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-      staking.methods.withdrawReward().send({
-        from: userAccount[0],
+      this.staking.methods.withdrawReward().send({
+        from: this.userAccount[0],
       }).then((response) => {
         const hash = response.transactionHash;
         this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
