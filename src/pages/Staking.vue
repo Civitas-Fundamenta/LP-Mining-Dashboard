@@ -367,7 +367,7 @@ export default {
         const hash = response.transactionHash;
         this.$q.notify(`Stake Added - Transaction Hash: ${hash}`);
         setTimeout(() => {
-          this.$router.go();
+          this.CheckChainData();
         }, 3000);
       });
     },
@@ -380,7 +380,7 @@ export default {
         const hash = response.transactionHash;
         this.$q.notify(`Stake Removed - Transaction Hash: ${hash}`);
         setTimeout(() => {
-          this.$router.go();
+          this.CheckChainData();
         }, 3000);
       });
     },
@@ -391,7 +391,7 @@ export default {
         const hash = response.transactionHash;
         this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
         setTimeout(() => {
-          this.$router.go();
+          this.CheckChainData();
         }, 3000);
       });
     },
