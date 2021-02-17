@@ -256,6 +256,23 @@
       The Contract is Currently Paused, Please check back later.
     </q-banner>
   </div>
+  <q-dialog v-model="pending">
+      <q-card dark>
+        <q-card-section>
+          <div class="text-h6">Hey! You have {{ pendingRewards }} FMTA pending withdrawal!</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Stake lock Period is 13000 blocks (48 hours). <br /><br /> This is reset every Time you withdraw pending rewards or remove stake. <br /> <br /> Pending rewards
+          are also withdrawn when removing.
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Dismiss" color="white" v-close-popup />
+          <q-btn flat label="Withdraw Rewards" color="white" @click="withdrawStake" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
 </q-page>
 </template>
@@ -284,6 +301,7 @@ export default {
       withdrawable: '',
       userAccount: [],
       staking: {},
+      pending: false,
     };
   },
   mounted() {
@@ -327,6 +345,9 @@ export default {
             from: this.userAccount[0],
           }).then((resp) => {
             this.pendingRewards = (resp / 1000000000000000000);
+            if (this.pendingRewards !== 0) {
+              this.pending = true;
+            }
           });
           this.checkForWithdraw();
           setInterval(this.checkForWithdraw, 60 * 1000);
