@@ -117,6 +117,8 @@ const onboard = Onboard({
     },
   },
   walletSelect: {
+    heading: 'Welcome to the Fundamenta App!',
+    description: 'In order to interact with our Staking and Liquidity mining dashboard please select your wallet below, then follow the steps on screen to begin using Fundamenta app.',
     wallets,
   },
 });
