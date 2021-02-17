@@ -314,8 +314,7 @@ export default {
         this.rewardsWindow = response;
       });
       this.staking.methods.isStakeholder(this.userAccount[0]).call().then((response) => {
-        // eslint-disable-next-line
-          this.isStakeholder = response[0];
+        [this.isStakeholder] = response;
         if (this.isStakeholder === true) {
           this.staking.methods.totalRewardsOf(this.userAccount[0]).call().then((respond) => {
             this.rewardCalc = (respond / 1000000000000000000);
