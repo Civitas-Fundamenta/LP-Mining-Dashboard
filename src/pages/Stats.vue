@@ -91,29 +91,20 @@ export default {
       this.$axios.get('https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J')
         .then((supplyData) => {
           const tSupply = supplyData.data.result / 10e17;
-          this.$axios.get(
-            'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0xa0b72536ba6496aec721400b5f0e1e65caf4be77&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J',
-          )
-            .then((fundingAlloc) => {
-              const fundingEmissionAlloc = fundingAlloc.data.result / 10e17;
-              this.$axios.get(
-                'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0xa4dda4edfb34222063c77dfe2f50b30f5df39870&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J',
-              )
-                .then((vesting) => {
-                  const vestingAddr = vesting.data.result / 10e17;
-                  this.$axios.get(
-                    'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0x22a68bb25bf760d954c7e67ff06dc85297356068&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J',
-                  )
-                    .then((hotWallet) => {
-                      const fundingHot = hotWallet.data.result / 10e17;
-                      staking.methods.totalStakes().call().then((response) => {
-                        const totalStakes = (response / 10e17);
-                        this.circulatingSupply = tSupply - (fundingEmissionAlloc + vestingAddr + fundingHot) + totalStakes;
-                        this.getMarketCap();
-                      });
-                    });
+          this.$axios.get('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0xa0b72536ba6496aec721400b5f0e1e65caf4be77&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J').then((fundingAlloc) => {
+            const fundingEmissionAlloc = fundingAlloc.data.result / 10e17;
+            this.$axios.get('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0xa4dda4edfb34222063c77dfe2f50b30f5df39870&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J').then((vesting) => {
+              const vestingAddr = vesting.data.result / 10e17;
+              this.$axios.get('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0x22a68bb25bf760d954c7e67ff06dc85297356068&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J').then((hotWallet) => {
+                const fundingHot = hotWallet.data.result / 10e17;
+                staking.methods.totalStakes().call().then((response) => {
+                  const totalStakes = (response / 10e17);
+                  this.circulatingSupply = tSupply - (fundingEmissionAlloc + vestingAddr + fundingHot) + totalStakes;
+                  this.getMarketCap();
                 });
+              });
             });
+          });
         });
     },
     async getMarketCap() {
@@ -126,19 +117,6 @@ export default {
           query: `{
               pair(id: "0x650e8b9d20293a276f76be24da4ce25f2d0090fb")
             {
-              id
-              reserve0
-              reserve1
-              reserveUSD
-              totalSupply
-              trackedReserveETH
-              reserveETH
-              volumeUSD
-              untrackedVolumeUSD
-              token0Price
-              token1Price
-              createdAtTimestamp
-              __typename
               token0Price
             }
           }`,
