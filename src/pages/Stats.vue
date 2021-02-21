@@ -58,8 +58,13 @@
 </template>
 
 <script>
+import Web3 from 'web3';
 import fetch from 'isomorphic-fetch';
 import ABI from '../assets/staking-abi.json';
+
+const web3 = new Web3(
+  new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/7921c78422994d2f82ac15663d975937'),
+);
 
 export default {
   name: 'PageIndex',
@@ -82,7 +87,7 @@ export default {
   methods: {
     async calculateCirculatingSupply() {
       const stakingAddress = '0x4d1c6fe8cce907ac9d884b7562452467f5c7ea3f';
-      const staking = new this.$API.Web3.eth.Contract(ABI, stakingAddress);
+      const staking = new web3.eth.Contract(ABI, stakingAddress);
       this.$axios.get('https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J')
         .then((supplyData) => {
           const tSupply = supplyData.data.result / 10e17;
