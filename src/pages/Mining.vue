@@ -26,7 +26,7 @@
             <br />
             <p style="text-align: left;">Select Lock Period</p>
             <br />
-            <q-slider v-model="lockPeriod" markers :min="5" :max="15" :step="5" label />
+            <q-slider v-model="lockPeriod" markers :min="5" :max="15" :step="5" label dark />
           </q-card-section>
 
           <q-card-section>
@@ -110,7 +110,7 @@ export default {
       positionAmount: '',
       tokenOptions: null,
       tokens: pools,
-      lockPeriod: 1,
+      lockPeriod: 5,
       HasPosition: '',
       UnlockHeight: '',
       LockedAmount: '',
