@@ -129,7 +129,6 @@ export default {
     };
   },
   mounted() {
-    // do something after mounting vue instance
     this.init();
   },
   methods: {

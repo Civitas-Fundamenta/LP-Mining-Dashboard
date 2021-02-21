@@ -85,8 +85,6 @@ export default {
       drawer: false,
     };
   },
-  mounted() {},
-  methods: {},
 };
 </script>
 <style>
