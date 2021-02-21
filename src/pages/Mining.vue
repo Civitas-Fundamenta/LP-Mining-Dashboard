@@ -154,13 +154,11 @@ export default {
         this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
         this.uniswapETHFTMA = '0x650e8b9d20293a276f76be24da4ce25f2d0090fb'; // USDC/FMTA Pool UNI-V2 Token
         this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
-        console.log(this.uniswapETHFTMAContract);
       } else {
         this.contractAddress = this.tokenOptions.address; // Liquidity Mining Contract
         this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
         this.uniswapETHFTMA = '0x8f6BcB61836F43cFDb7DE46e2244d363D90527Ef'; // ETH/FMTA Pool UNI-V2 Token
         this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHABI, this.uniswapETHFTMA);
-        console.log(this.uniswapETHFTMAContract);
       }
       this.uniswapETHFTMAContract.methods.approve(poolAddress, amount).send({
         from: this.userAccount[0],
@@ -198,7 +196,6 @@ export default {
             if (this.countDown < 0) {
               this.countDown = 'Unlocked';
             }
-            console.info(this.countDown);
           });
         });
       });
@@ -247,8 +244,8 @@ export default {
       this.uniswapETHFTMAContract.methods.approve(this.tokenOptions.address, amount).send({
         from: this.userAccount[0],
       }).then((receipt) => {
+        this.$q.notify(`Approved - Transaction Hash: ${receipt.hash}`);
         this.withdrawFinal();
-        console.log(receipt);
       });
     },
     async withdrawFinal() {
@@ -292,8 +289,6 @@ export default {
       this.contract.methods.provider(poolId, this.userAccount[0]).call().then((response) => {
         const entirePosition = response.LockedAmount;
         const entirePositionFinal = this.$API.web3.eth.abi.encodeParameter('uint256', entirePosition);
-        console.log(`${entirePosition} Entire Position as Wei`);
-        console.log(`${entirePositionFinal} Entire Position as uint256`);
         this.contract.methods.removePosition(entirePositionFinal, poolId).send({
           from: this.userAccount[0],
         });

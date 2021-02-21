@@ -123,7 +123,6 @@ const onboard = Onboard({
   },
 });
 
-console.log(onboard);
 API.onboard = onboard;
 
 Vue.prototype.$axios = axios;

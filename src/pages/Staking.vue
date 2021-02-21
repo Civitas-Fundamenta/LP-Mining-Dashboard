@@ -360,11 +360,8 @@ export default {
       this.staking.methods.lastWdHeight().call({
         from: this.userAccount[0],
       }).then((response) => {
-        console.log(response);
         const lastWithdraw = Number(response) + 13000;
-        console.log(lastWithdraw);
         const rewardsUnlock = Number(response) + 6500;
-        console.log(rewardsUnlock);
         this.$API.web3.eth.getBlockNumber().then((blockHeight) => {
           const currentBlock = Number(blockHeight);
           const withdrawable = Number(currentBlock) - Number(lastWithdraw);
