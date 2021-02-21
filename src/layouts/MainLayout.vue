@@ -14,7 +14,7 @@
         </q-toolbar-title>
 
         <div>
-          Version: 2.0.0 - Beta
+          Version: 2.0.0
         </div>
 
       </q-toolbar>
