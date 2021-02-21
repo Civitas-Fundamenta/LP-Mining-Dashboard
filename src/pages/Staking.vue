@@ -360,13 +360,16 @@ export default {
       this.staking.methods.lastWdHeight().call({
         from: this.userAccount[0],
       }).then((response) => {
-        const lastWithdraw = response + 13000;
-        const rewardsUnlock = response + 6500;
+        console.log(response);
+        const lastWithdraw = Number(response) + 13000;
+        console.log(lastWithdraw);
+        const rewardsUnlock = Number(response) + 6500;
+        console.log(rewardsUnlock);
         this.$API.web3.eth.getBlockNumber().then((blockHeight) => {
-          const currentBlock = blockHeight;
-          const withdrawable = currentBlock - lastWithdraw;
-          const sWithdrawable = lastWithdraw - currentBlock;
-          const rWithdrawable = rewardsUnlock - currentBlock;
+          const currentBlock = Number(blockHeight);
+          const withdrawable = Number(currentBlock) - Number(lastWithdraw);
+          const sWithdrawable = Number(lastWithdraw) - Number(currentBlock);
+          const rWithdrawable = Number(rewardsUnlock) - Number(currentBlock);
           if (withdrawable === currentBlock) {
             this.lastWdheight = 'Nothing Staked';
           } else if (rWithdrawable < 1 && sWithdrawable < 1) {
