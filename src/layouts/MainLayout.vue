@@ -14,8 +14,9 @@
         </q-toolbar-title>
 
         <div>
-          {{ userAddy[0] }}
+          Version: 2.0.0
         </div>
+
       </q-toolbar>
     </q-header>
     <q-drawer v-model="drawer" :width="200" :breakpoint="500" bordered dark style="text-decoration: none;">
@@ -77,43 +78,12 @@
 </template>
 
 <script>
-import detectEthereumProvider from '@metamask/detect-provider';
-import Web3 from 'web3';
-
-const ethEnabled = () => {
-  if (window.ethereum) {
-    window.web3 = new Web3(window.ethereum);
-    window.ethereum.enable();
-    return true;
-  }
-  return false;
-};
-if (!ethEnabled()) {
-  alert(
-    'Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!',
-  );
-}
-
 export default {
   name: 'MainLayout',
   data() {
     return {
       drawer: false,
-      userAddy: [],
     };
-  },
-  mounted() {
-    this.getWallet();
-  },
-  methods: {
-    async getWallet() {
-      const provider = await detectEthereumProvider();
-      if (provider) {
-        this.userAddy = await provider.request({
-          method: 'eth_requestAccounts',
-        });
-      }
-    },
   },
 };
 </script>
