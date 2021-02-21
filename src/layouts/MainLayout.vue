@@ -13,6 +13,10 @@
           Fundamenta Staking and Liquidity Mining
         </q-toolbar-title>
 
+        <div>
+          Version: 2.0.0 - Beta
+        </div>
+
       </q-toolbar>
     </q-header>
     <q-drawer v-model="drawer" :width="200" :breakpoint="500" bordered dark style="text-decoration: none;">
