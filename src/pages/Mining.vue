@@ -125,7 +125,6 @@ export default {
       contractAddress: '',
       contract: '',
       countDown: 'Loading...',
-      userAccount: [],
     };
   },
   mounted() {
@@ -133,10 +132,12 @@ export default {
   },
   methods: {
     async init() {
-      await this.$API.onboard.walletSelect();
-      await this.$API.onboard.walletCheck();
-      this.userAccount = await this.$API.web3.eth.getAccounts();
-      this.CheckChainData();
+      if (this.$API.userAccount === undefined) {
+        await this.$API.init();
+        this.CheckChainData();
+      } else {
+        this.CheckChainData();
+      }
     },
     async CheckChainData() {
       this.contractAddress = '0xF6de2B6eAB93d3A0AEC5863e3190b319602A1e70'; // Liquidity Mining Contract
@@ -161,7 +162,7 @@ export default {
         this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHABI, this.uniswapETHFTMA);
       }
       this.uniswapETHFTMAContract.methods.approve(poolAddress, amount).send({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       }).then((receipt) => {
         this.$q.notify(`Stake Added - Transaction Hash: ${receipt.hash}`);
       });
@@ -179,16 +180,16 @@ export default {
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
       const lockInPeriod = this.$API.web3.eth.abi.encodeParameter('uint256', this.lockPeriod);
       this.contract.methods.addPosition(amount, lockInPeriod, poolId).send({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       });
     },
     async countDownFunc() {
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
-      this.contract.methods.hasPosition(this.userAccount[0], poolId).call({
-        from: this.userAccount[0],
+      this.contract.methods.hasPosition(this.$API.userAccount[0], poolId).call({
+        from: this.$API.userAccount[0],
       }).then((receipt) => {
         this.HasPosition = receipt;
-        this.contract.methods.provider(poolId, this.userAccount[0]).call().then((response) => {
+        this.contract.methods.provider(poolId, this.$API.userAccount[0]).call().then((response) => {
           this.UnlockHeight = response.UnlockHeight;
           this.$API.web3.eth.getBlockNumber().then((blockHeight) => {
             const currentBlock = blockHeight;
@@ -209,11 +210,11 @@ export default {
         this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
       }
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
-      this.contract.methods.hasPosition(this.userAccount[0], poolId).call({
-        from: this.userAccount[0],
+      this.contract.methods.hasPosition(this.$API.userAccount[0], poolId).call({
+        from: this.$API.userAccount[0],
       }).then((receipt) => {
         this.HasPosition = receipt;
-        this.contract.methods.provider(poolId, this.userAccount[0]).call().then((response) => {
+        this.contract.methods.provider(poolId, this.$API.userAccount[0]).call().then((response) => {
           this.LockedAmount = response.LockedAmount / 1000000000000000000;
           this.Days = response.Days;
           this.UserBP = response.UserBP;
@@ -242,7 +243,7 @@ export default {
         this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHABI, this.uniswapETHFTMA);
       }
       this.uniswapETHFTMAContract.methods.approve(this.tokenOptions.address, amount).send({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       }).then((receipt) => {
         this.$q.notify(`Approved - Transaction Hash: ${receipt.hash}`);
         this.withdrawFinal();
@@ -260,7 +261,7 @@ export default {
         this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
       }
       this.contract.methods.withdrawAccruedYieldAndAdd(poolId, amount).send({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       });
     },
     async withdrawOnly() {
@@ -274,7 +275,7 @@ export default {
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', 0);
       this.contract.methods.withdrawAccruedYieldAndAdd(poolId, amount).send({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       });
     },
     async removeEntirePosition() {
@@ -286,11 +287,11 @@ export default {
         this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
       }
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
-      this.contract.methods.provider(poolId, this.userAccount[0]).call().then((response) => {
+      this.contract.methods.provider(poolId, this.$API.userAccount[0]).call().then((response) => {
         const entirePosition = response.LockedAmount;
         const entirePositionFinal = this.$API.web3.eth.abi.encodeParameter('uint256', entirePosition);
         this.contract.methods.removePosition(entirePositionFinal, poolId).send({
-          from: this.userAccount[0],
+          from: this.$API.userAccount[0],
         });
       });
     },

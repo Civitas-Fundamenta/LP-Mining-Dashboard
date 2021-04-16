@@ -13,8 +13,11 @@
           Fundamenta Staking and Liquidity Mining
         </q-toolbar-title>
 
-        <div>
-          Version: 2.0.0
+        <div v-if="inited === false">
+          <q-btn color="white" text-color="black" label="Sign In" @click="init" />
+        </div>
+        <div v-else>
+          Version: 2.0.0 - Signed in.
         </div>
 
       </q-toolbar>
@@ -83,7 +86,16 @@ export default {
   data() {
     return {
       drawer: false,
+      inited: false,
     };
+  },
+  methods: {
+    async init() {
+      if (this.$API.userAccount === undefined) {
+        await this.$API.init();
+        this.inited = true;
+      }
+    },
   },
 };
 </script>
