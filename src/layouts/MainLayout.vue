@@ -17,7 +17,7 @@
           <q-btn color="white" text-color="black" label="Sign In" @click="init" />
         </div>
         <div v-else>
-          Version: 2.0.0 - Signed in.
+          Version: 2.1.0 - Signed in.
         </div>
 
       </q-toolbar>
