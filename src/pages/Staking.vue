@@ -309,11 +309,14 @@ export default {
   },
   methods: {
     async init() {
-      await this.$API.onboard.walletSelect();
-      await this.$API.onboard.walletCheck();
-      this.userAccount = await this.$API.web3.eth.getAccounts();
-      this.staking = new this.$API.web3.eth.Contract(ABI, stakingAddress);
-      this.CheckChainData();
+      if (this.$API.userAccount === undefined) {
+        await this.$API.init();
+        this.staking = new this.$API.web3.eth.Contract(ABI, stakingAddress);
+        this.CheckChainData();
+      } else {
+        this.staking = new this.$API.web3.eth.Contract(ABI, stakingAddress);
+        this.CheckChainData();
+      }
     },
     async CheckChainData() {
       this.staking.methods.stakingOff().call().then((response) => {
@@ -331,18 +334,18 @@ export default {
       this.staking.methods.rewardsWindow().call().then((response) => {
         this.rewardsWindow = response;
       });
-      this.staking.methods.isStakeholder(this.userAccount[0]).call().then((response) => {
+      this.staking.methods.isStakeholder(this.$API.userAccount[0]).call().then((response) => {
         // eslint-disable-next-line
         this.isStakeholder = response[0];
         if (this.isStakeholder === true) {
-          this.staking.methods.totalRewardsOf(this.userAccount[0]).call().then((respond) => {
+          this.staking.methods.totalRewardsOf(this.$API.userAccount[0]).call().then((respond) => {
             this.rewardCalc = (respond / 1000000000000000000);
           });
-          this.staking.methods.stakeOf(this.userAccount[0]).call().then((resp) => {
+          this.staking.methods.stakeOf(this.$API.userAccount[0]).call().then((resp) => {
             this.stakeOf = (resp / 1000000000000000000);
           });
           this.staking.methods.rewardsAccrued().call({
-            from: this.userAccount[0],
+            from: this.$API.userAccount[0],
           }).then((resp) => {
             this.pendingRewards = (resp / 1000000000000000000);
             if (this.pendingRewards !== 0) {
@@ -358,7 +361,7 @@ export default {
     },
     async checkForWithdraw() {
       this.staking.methods.lastWdHeight().call({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       }).then((response) => {
         const lastWithdraw = Number(response) + 13000;
         const rewardsUnlock = Number(response) + 6500;
@@ -383,7 +386,7 @@ export default {
       const amountInt = this.$API.web3.utils.toWei(this.addStakeAmount, 'ether');
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountInt);
       this.staking.methods.createStake(amount).send({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       }).then((response) => {
         const hash = response.transactionHash;
         this.$q.notify(`Stake Added - Transaction Hash: ${hash}`);
@@ -396,7 +399,7 @@ export default {
       const amountInt = this.$API.web3.utils.toWei(this.removeStakeAmount, 'ether');
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountInt);
       this.staking.methods.removeStake(amount).send({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       }).then((response) => {
         const hash = response.transactionHash;
         this.$q.notify(`Stake Removed - Transaction Hash: ${hash}`);
@@ -407,7 +410,7 @@ export default {
     },
     async withdrawStake() {
       this.staking.methods.withdrawReward().send({
-        from: this.userAccount[0],
+        from: this.$API.userAccount[0],
       }).then((response) => {
         const hash = response.transactionHash;
         this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
