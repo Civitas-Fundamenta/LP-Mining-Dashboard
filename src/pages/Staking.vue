@@ -1,8 +1,8 @@
 <template>
 <q-page class="fc">
   <!-- Staking Enabled -->
-  <div v-if="off === false">
-    <div v-if="paused === false">
+  <div v-if="off === 'false'">
+    <div v-if="paused === 'false'">
       <div class="row text-center">
         <div class="col-xs-6 col-sm-4" style="padding: 2%;">
           <div class="shadow-5">
@@ -73,12 +73,12 @@
               <q-card-section class="b">
                 Stake Unlock Height | Rewards Unlock Height
               </q-card-section>
-              <div v-if="isStakeholder === true">
+              <div v-if="isStakeholder === 'true'">
                 <q-card-section class="q-pt-none">
                   {{ lastWdheight.toLocaleString() }}
                 </q-card-section>
               </div>
-              <div v-if="isStakeholder === false">
+              <div v-if="isStakeholder === 'false'">
                 <q-card-section class="q-pt-none">
                   0 | 0
                 </q-card-section>
@@ -89,7 +89,7 @@
       </div>
       <br>
       <!-- if User Doesn't have a stake -->
-      <div v-if="isStakeholder === false" class="row text-center justify-center">
+      <div v-if="isStakeholder === 'false'" class="row text-center justify-center">
         <div class="col-8" style="padding: 2%;">
           <!-- Add New Stake Card -->
           <div class="shadow-5">
@@ -128,7 +128,7 @@
         </div>
       </div>
       <!-- If User Has Stake -->
-      <div v-if="isStakeholder === true">
+      <div v-if="isStakeholder === 'true'">
         <div class="row text-center">
           <div class="col-xs-12 col-sm-6" style="padding: 2%;">
             <!-- Add Stake Card -->
@@ -142,7 +142,7 @@
                   <q-input dark color="white" v-model="addStakeAmount" type="number" max="30000" label="Enter Amount to Stake" />
                 </q-card-section>
 
-                <div v-if="pendingRewards != 0">
+                <div v-if="pendingRewards != '0'">
                     <q-banner inline-actions class="text-white bg-red">
                     MUST WITHDRAW PENDING REWARDS TO ADD TO STAKED POSITION
                     </q-banner>
@@ -217,7 +217,7 @@
     </div>
   </div>
   <!-- Staking Off-->
-  <div v-if="off === true" style="padding: 2%;" class="text-center">
+  <div v-if="off === 'true'" style="padding: 2%;" class="text-center">
     <br>
     <div class="row text-center">
       <div class="col" style="padding: 2%;">
@@ -250,7 +250,7 @@
     </div>
   </div>
   <!-- Staking Disabled/Paused -->
-  <div v-if="paused === true" style="padding: 2%;" class="text-center">
+  <div v-if="paused === 'true'" style="padding: 2%;" class="text-center">
     <br>
     <q-banner inline-actions class="text-white bg-red">
       The Contract is Currently Paused, Please check back later.
