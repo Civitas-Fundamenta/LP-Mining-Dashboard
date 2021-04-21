@@ -1,8 +1,8 @@
 <template>
 <q-page class="fc">
   <!-- Staking Enabled -->
-  <div v-if="off === 'false'">
-    <div v-if="paused === 'false'">
+  <div v-if="off === false">
+    <div v-if="paused === false">
       <div class="row text-center">
         <div class="col-xs-6 col-sm-4" style="padding: 2%;">
           <div class="shadow-5">
@@ -73,12 +73,12 @@
               <q-card-section class="b">
                 Stake Unlock Height | Rewards Unlock Height
               </q-card-section>
-              <div v-if="isStakeholder === 'true'">
+              <div v-if="isStakeholder === true">
                 <q-card-section class="q-pt-none">
                   {{ lastWdheight.toLocaleString() }}
                 </q-card-section>
               </div>
-              <div v-if="isStakeholder === 'false'">
+              <div v-if="isStakeholder === false">
                 <q-card-section class="q-pt-none">
                   0 | 0
                 </q-card-section>
@@ -89,7 +89,7 @@
       </div>
       <br>
       <!-- if User Doesn't have a stake -->
-      <div v-if="isStakeholder === 'false'" class="row text-center justify-center">
+      <div v-if="isStakeholder === false" class="row text-center justify-center">
         <div class="col-8" style="padding: 2%;">
           <!-- Add New Stake Card -->
           <div class="shadow-5">
@@ -128,7 +128,7 @@
         </div>
       </div>
       <!-- If User Has Stake -->
-      <div v-if="isStakeholder === 'true'">
+      <div v-if="isStakeholder === true">
         <div class="row text-center">
           <div class="col-xs-12 col-sm-6" style="padding: 2%;">
             <!-- Add Stake Card -->
@@ -142,7 +142,7 @@
                   <q-input dark color="white" v-model="addStakeAmount" type="number" max="30000" label="Enter Amount to Stake" />
                 </q-card-section>
 
-                <div v-if="pendingRewards != '0'">
+                <div v-if="pendingRewards != 0">
                     <q-banner inline-actions class="text-white bg-red">
                     MUST WITHDRAW PENDING REWARDS TO ADD TO STAKED POSITION
                     </q-banner>
@@ -184,6 +184,26 @@
         </div>
         <div class="row text-center justify-center">
           <div class="col-xs-12 col-sm-6" style="padding: 2%;">
+            <!-- Compound Stake Card -->
+            <div class="shadow-5">
+              <q-card bordered class="my-card cbg">
+                <q-card-section class="">
+                  <div class="text-h6">Compound Rewards</div>
+                </q-card-section>
+
+                <q-card-section>
+                  <q-btn style="background: #93979A;" @click="compound" text-color="white" label="Withdraw">
+                    <q-tooltip transition-show="flip-right" transition-hide="flip-left">
+                      GIMME DAT SWEET REWARD
+                    </q-tooltip>
+                  </q-btn>
+                  <div class="text-center">
+                  </div>
+                </q-card-section>
+              </q-card>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6" style="padding: 2%;">
             <!-- Remove Stake Card -->
             <div class="shadow-5">
               <q-card bordered class="my-card cbg">
@@ -217,7 +237,7 @@
     </div>
   </div>
   <!-- Staking Off-->
-  <div v-if="off === 'true'" style="padding: 2%;" class="text-center">
+  <div v-if="off === true" style="padding: 2%;" class="text-center">
     <br>
     <div class="row text-center">
       <div class="col" style="padding: 2%;">
@@ -250,7 +270,7 @@
     </div>
   </div>
   <!-- Staking Disabled/Paused -->
-  <div v-if="paused === 'true'" style="padding: 2%;" class="text-center">
+  <div v-if="paused === true" style="padding: 2%;" class="text-center">
     <br>
     <q-banner inline-actions class="text-white bg-red">
       The Contract is Currently Paused, Please check back later.
@@ -278,26 +298,26 @@
 </template>
 
 <script>
-import ABI from '../assets/staking-abi.json';
+import ABI from '../assets/stakingUpdate.json';
 
-const stakingAddress = '0x4d1c6fe8cce907ac9d884b7562452467f5c7ea3f';
+const stakingAddress = '0x73d7D3A9f8B2e8a207b23B6Ab0ea8C1fb16577D9';
 
 export default {
-  name: 'Staking',
+  name: 'PageIndex',
   data() {
     return {
-      off: '',
-      paused: '',
+      off: false,
+      paused: false,
       totalStakes: '',
       stakeCap: '',
-      isStakeholder: '',
+      isStakeholder: false,
       rewardCalc: 0,
       stakeOf: '',
       rewardsWindow: '',
       addStakeAmount: '',
       lastWdheight: '',
       removeStakeAmount: null,
-      pendingRewards: '',
+      pendingRewards: 0,
       withdrawable: '',
       userAccount: [],
       staking: {},
@@ -406,6 +426,8 @@ export default {
         setTimeout(() => {
           this.CheckChainData();
         }, 3000);
+      }).catch((error) => {
+        this.$q.notify(error);
       });
     },
     async withdrawStake() {
@@ -417,6 +439,19 @@ export default {
         setTimeout(() => {
           this.CheckChainData();
         }, 3000);
+      });
+    },
+    async compound() {
+      this.staking.methods.compoundRewards().send({
+        from: this.$API.userAccount[0],
+      }).then((response) => {
+        const hash = response.transactionHash;
+        this.$q.notify(`Stake Compounded - Transaction Hash: ${hash}`);
+        setTimeout(() => {
+          this.CheckChainData();
+        }, 3000);
+      }).catch((error) => {
+        this.$q.notify(error);
       });
     },
   },
