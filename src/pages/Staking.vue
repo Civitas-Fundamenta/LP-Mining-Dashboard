@@ -283,7 +283,7 @@ import ABI from '../assets/staking-abi.json';
 const stakingAddress = '0x4d1c6fe8cce907ac9d884b7562452467f5c7ea3f';
 
 export default {
-  name: 'PageIndex',
+  name: 'Staking',
   data() {
     return {
       off: '',
