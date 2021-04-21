@@ -11,8 +11,6 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@metamask-checker/vue": "^1.1.0",
-    "@metamask/detect-provider": "^1.1.0",
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "bnc-onboard": "^1.19.1",
