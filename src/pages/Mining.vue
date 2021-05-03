@@ -106,18 +106,18 @@ export default {
   name: 'PageIndex',
   data() {
     return {
-      paused: '',
-      positionAmount: '',
+      paused: false,
+      positionAmount: 0,
       tokenOptions: null,
       tokens: pools,
       lockPeriod: 5,
-      HasPosition: '',
+      HasPosition: false,
       UnlockHeight: '',
       LockedAmount: '',
       Days: '',
       UserBP: '',
       TotalRewardsPaid: '',
-      withdrew: '',
+      withdrew: false,
       withdrawAmount: '',
       removeAll: '',
       uniswapETHFTMA: '',
@@ -140,7 +140,7 @@ export default {
       }
     },
     async CheckChainData() {
-      this.contractAddress = '0xF6de2B6eAB93d3A0AEC5863e3190b319602A1e70'; // Liquidity Mining Contract
+      this.contractAddress = '0xf35407A4B025BAbbE0675f35AF3CaDFd281c0320'; // Liquidity Mining Contract
       this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
       this.contract.methods.paused().call().then((response) => {
         this.paused = response;
