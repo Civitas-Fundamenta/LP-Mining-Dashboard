@@ -300,7 +300,7 @@
 <script>
 import ABI from '../assets/stakingUpdate.json';
 
-const stakingAddress = '0x73d7D3A9f8B2e8a207b23B6Ab0ea8C1fb16577D9';
+const stakingAddress = '0x11Fe61999d17CC5Db98CAe0De6401B35268d2CeD';
 
 export default {
   name: 'PageIndex',
