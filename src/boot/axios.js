@@ -5,7 +5,7 @@ import Web3 from 'web3';
 
 const API = {};
 const apiKey = '0ee58158-e48f-492b-b7df-92554915a6b3';
-const networkId = 3;
+const networkId = 56;
 const FORTMATIC_KEY = 'pk_live_61EC2B200F4216C6';
 const PORTIS_KEY = '924889fa-9818-473f-8ceb-a86b7248d5c5';
 const INFURA_KEY = 'ad2ee80801ce45de9dd717e612c904cb';
