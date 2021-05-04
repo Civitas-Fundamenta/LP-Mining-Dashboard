@@ -89,6 +89,9 @@ export default {
       inited: false,
     };
   },
+  mounted() {
+    this.init();
+  },
   methods: {
     async init() {
       if (this.$API.userAccount === undefined) {
