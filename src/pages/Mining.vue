@@ -151,10 +151,8 @@ export default {
         from: this.$API.userAccount[0],
       }).then((receipt) => {
         if (receipt === '115792089237316195423570985008687907853269984665640564039457584007913129639935') {
-          console.log(receipt, '115792089237316195423570985008687907853269984665640564039457584007913129639935');
           this.notApproved = false;
         } else {
-          console.log(receipt, '115792089237316195423570985008687907853269984665640564039457584007913129639935');
           this.notApproved = true;
         }
       });
@@ -173,9 +171,7 @@ export default {
       });
     },
     async createPosition() {
-      if (this.tokenOptions.label === 'FMTA/BNB') {
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
-      }
+      this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
       const amountInt = this.$API.web3.utils.toWei(this.positionAmount, 'ether');
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountInt);
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
@@ -203,9 +199,7 @@ export default {
       });
     },
     async selectPool() {
-      if (this.tokenOptions.label === 'FMTA/BNB') {
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
-      }
+      this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
       this.contract.methods.hasPosition(this.$API.userAccount[0], poolId).call({
         from: this.$API.userAccount[0],
@@ -258,9 +252,7 @@ export default {
       });
     },
     async removeEntirePosition() {
-      if (this.tokenOptions.label === 'FMTA/BNB') {
-        this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
-      }
+      this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
       this.contract.methods.provider(poolId, this.$API.userAccount[0]).call().then((response) => {
         const entirePosition = response.LockedAmount;
