@@ -1,9 +1,5 @@
 [{
-  "label": "FMTA/BSC",
-  "pid": 0,
-  "tokenGeneric": "Uniswap V2 LP Token"
-}, {
-  "label": "FMTA/ETH",
-  "pid": 1,
+  "label": "FMTA/BNB",
+  "pid": 2,
   "tokenGeneric": "Uniswap V2 LP Token"
 }]
