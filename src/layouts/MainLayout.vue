@@ -14,10 +14,10 @@
         </q-toolbar-title>
 
         <div v-if="inited === false">
-          <q-btn color="white" text-color="black" label="Sign In" @click="init" />
+          <q-btn color="white" text-color="black" label="Sign In" @click="init()" />
         </div>
         <div v-else>
-          Version: 2.1.0 - Signed in.
+          Signed in - V3.0.0
         </div>
 
       </q-toolbar>
@@ -88,6 +88,9 @@ export default {
       drawer: false,
       inited: false,
     };
+  },
+  mounted() {
+    this.init();
   },
   methods: {
     async init() {

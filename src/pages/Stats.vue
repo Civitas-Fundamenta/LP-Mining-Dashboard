@@ -9,7 +9,7 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <h6> {{ marketCap.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}} </h6>
+            <h6> {{ marketCap.toLocaleString()}} </h6>
           </q-card-section>
 
         </q-card>
@@ -21,7 +21,7 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <h6> {{ circulatingSupply.toLocaleString('en-US')}} FMTA </h6>
+            <h6> {{ circulatingSupply.toLocaleString()}} FMTA </h6>
           </q-card-section>
 
         </q-card>
@@ -42,7 +42,7 @@
               <div v-if="showReward === true" class="col-xs-12 col-sm-12">
                 <br>
                 <q-banner inline-actions rounded class="bg-green text-white">
-                  Estimated FMTA Reward: {{ finalReward.toLocaleString('en-US') }} FMTA
+                  Estimated FMTA Reward: {{ finalReward.toLocaleString() }} FMTA
                   <br>
                   Estimated Reward in USD (Based on Current Price): ${{ rewardUsd.toFixed(5) }}
                 </q-banner>
@@ -58,54 +58,32 @@
 </template>
 
 <script>
-import Web3 from 'web3';
 import fetch from 'isomorphic-fetch';
-import ABI from '../assets/staking-abi.json';
-
-const web3 = new Web3(
-  new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/7921c78422994d2f82ac15663d975937'),
-);
 
 export default {
   name: 'PageIndex',
   data() {
     return {
-      totalSupply: '',
-      marketCap: '',
-      circulatingSupply: '',
-      price: '',
-      amountOfStake: '',
-      days: '',
+      totalSupply: 0,
+      marketCap: 0,
+      circulatingSupply: 0,
+      price: 0,
+      amountOfStake: 0,
+      days: 0,
       showReward: false,
-      finalReward: '',
-      rewardUsd: '',
+      finalReward: 0,
+      rewardUsd: 0,
     };
   },
-  created() {
+  mounted() {
     this.calculateCirculatingSupply();
   },
   methods: {
     async calculateCirculatingSupply() {
-      const stakingAddress = '0x4d1c6fe8cce907ac9d884b7562452467f5c7ea3f';
-      const staking = new web3.eth.Contract(ABI, stakingAddress);
-      this.$axios.get('https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J')
-        .then((supplyData) => {
-          const tSupply = supplyData.data.result / 10e17;
-          this.$axios.get('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0xa0b72536ba6496aec721400b5f0e1e65caf4be77&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J').then((fundingAlloc) => {
-            const fundingEmissionAlloc = fundingAlloc.data.result / 10e17;
-            this.$axios.get('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0xa4dda4edfb34222063c77dfe2f50b30f5df39870&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J').then((vesting) => {
-              const vestingAddr = vesting.data.result / 10e17;
-              this.$axios.get('https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4&address=0x22a68bb25bf760d954c7e67ff06dc85297356068&tag=latest&apikey=X5BTPZKK1GAQ66FWQP24X53PW98YC5BD4J').then((hotWallet) => {
-                const fundingHot = hotWallet.data.result / 10e17;
-                staking.methods.totalStakes().call().then((response) => {
-                  const totalStakes = (response / 10e17);
-                  this.circulatingSupply = tSupply - (fundingEmissionAlloc + vestingAddr + fundingHot) + totalStakes;
-                  this.getMarketCap();
-                });
-              });
-            });
-          });
-        });
+      this.$axios.get('https://api.fundamenta.network/circulating_supply').then((result) => {
+        this.circulatingSupply = result.data;
+      });
+      this.getMarketCap();
     },
     async getMarketCap() {
       fetch('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2', {

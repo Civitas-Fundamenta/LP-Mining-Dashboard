@@ -1205,23 +1205,6 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-5.49.0.tgz#e14e34df1605c17d6b90eb32c591c7b3de3fbae8"
   integrity sha512-Ynl2JzRwh8l9PoXrDNihXEicpVo6Ra2lYZoqSYfVH/v/2/TSa/JB9Qll8P85XFYkS3ouDTTbp1S5KViaTkqD5g==
 
-"@metamask-checker/core@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@metamask-checker/core/-/core-1.0.0.tgz#a32379cae598abd5c1f64d73c414c7de071a96a5"
-  integrity sha512-xiVQCP25aReqB68EeC0Ny2WyVsy/4mvslLmzlqCJIcnfbp4EmV3XqxdR5wnFEBLhKfRmoWcwMwL545TiYMatPg==
-
-"@metamask-checker/vue@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@metamask-checker/vue/-/vue-1.1.0.tgz#c3464b1847d3451cd1c3401becc950250ed80109"
-  integrity sha512-2R1peMPcvtQCN+V9NS4bKyRGyNKTgXZzCsOlmH0bO62+8woObeS2RlCLsM2k5yB/dkZR03jC+i/n73yfDckXCA==
-  dependencies:
-    "@metamask-checker/core" "^1.0.0"
-
-"@metamask/detect-provider@^1.1.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@metamask/detect-provider/-/detect-provider-1.2.0.tgz#3667a7531f2a682e3c3a43eaf3a1958bdb42a696"
-  integrity sha512-ocA76vt+8D0thgXZ7LxFPyqw3H7988qblgzddTDA6B8a/yU0uKV42QR/DhA+Jh11rJjxW0jKvwb5htA6krNZDQ==
-
 "@metamask/safe-event-emitter@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
