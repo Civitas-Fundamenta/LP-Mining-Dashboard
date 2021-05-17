@@ -192,7 +192,7 @@
                 </q-card-section>
 
                 <q-card-section>
-                  <q-btn style="background: #93979A;" @click="compound" text-color="white" label="Withdraw">
+                  <q-btn style="background: #93979A;" @click="compound" text-color="white" label="Compound Rewards">
                     <q-tooltip transition-show="flip-right" transition-hide="flip-left">
                       GIMME DAT SWEET REWARD
                     </q-tooltip>

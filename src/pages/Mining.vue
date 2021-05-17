@@ -122,7 +122,7 @@ export default {
       removeAll: '',
       uniswapETHFTMA: '',
       uniswapETHFTMAContract: '',
-      contractAddress: '0x980c1aad0cabb7b8d445d2a96da1ec252bcc2274',
+      contractAddress: '0x3A80a7C271450802D9a9E689A7a1D80EF727dfCb',
       contract: '',
       countDown: 'Loading...',
       notApproved: false,
@@ -145,15 +145,17 @@ export default {
       this.contract.methods.paused().call().then((response) => {
         this.paused = response;
       });
-      this.uniswapETHFTMA = '0x8900073b24d63e4aff68d7f33c39148fe6d6aba1'; // USDC/FMTA Pool UNI-V2 Token
+      this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
       this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
-      this.uniswapETHFTMAContract.methods.allowance(this.$API.userAccount[0], '0x980c1aad0cabb7b8d445d2a96da1ec252bcc2274').call({
+      this.uniswapETHFTMAContract.methods.allowance(this.$API.userAccount[0], '0x3A80a7C271450802D9a9E689A7a1D80EF727dfCb').call({
         from: this.$API.userAccount[0],
       }).then((receipt) => {
         if (receipt === '115792089237316195423570985008687907853269984665640564039457584007913129639935') {
+          console.log(receipt);
           this.notApproved = false;
         } else {
           this.notApproved = true;
+          console.log(receipt);
         }
       });
     },
@@ -162,12 +164,13 @@ export default {
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amounts);
       const poolAddress = this.contractAddress;
       this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
-      this.uniswapETHFTMA = '0x8900073b24d63e4aff68d7f33c39148fe6d6aba1'; // USDC/FMTA Pool UNI-V2 Token
+      this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
       this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
       this.uniswapETHFTMAContract.methods.approve(poolAddress, amount).send({
         from: this.$API.userAccount[0],
       }).then((receipt) => {
         this.$q.notify(`Stake Added - Transaction Hash: ${receipt.hash}`);
+        this.CheckChainData();
       });
     },
     async createPosition() {
@@ -223,7 +226,7 @@ export default {
       const amountToWithdraw = this.$API.web3.utils.toWei(this.withdrawAmount, 'ether');
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountToWithdraw);
       this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
-      this.uniswapETHFTMA = '0x8900073b24d63e4aff68d7f33c39148fe6d6aba1'; // USDC/FMTA Pool UNI-V2 Token
+      this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
       this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
       this.uniswapETHFTMAContract.methods.approve('0x980c1aad0cabb7b8d445d2a96da1ec252bcc2274', amount).send({
         from: this.$API.userAccount[0],
