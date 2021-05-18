@@ -9,7 +9,7 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <h6> {{ marketCap.toLocaleString()}} </h6>
+            <h6> {{ marketCap}} </h6>
           </q-card-section>
 
         </q-card>
@@ -21,7 +21,7 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <h6> {{ circulatingSupply.toLocaleString()}} FMTA </h6>
+            <h6> {{ circulatingSupply}} FMTA </h6>
           </q-card-section>
 
         </q-card>
@@ -42,7 +42,7 @@
               <div v-if="showReward === true" class="col-xs-12 col-sm-12">
                 <br>
                 <q-banner inline-actions rounded class="bg-green text-white">
-                  Estimated FMTA Reward: {{ finalReward.toLocaleString() }} FMTA
+                  Estimated FMTA Reward: {{ finalReward }} FMTA
                   <br>
                   Estimated Reward in USD (Based on Current Price): ${{ rewardUsd.toFixed(5) }}
                 </q-banner>
