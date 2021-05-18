@@ -30,8 +30,9 @@
           </q-card-section>
 
           <q-card-section>
-            <q-btn color="white" v-if="notApproved === true" @click="getApproval" text-color="black" label="Approve" />
-            <q-btn color="white" v-if="notApproved === false" style="margin-left: 1%;" @click="createPosition" text-color="black" label="Create Position" />
+            <q-btn color="white" @click="CheckChainData()" text-color="black" label="Check Chaindata" style="margin-left: 1%;" />
+            <q-btn color="white" v-if="notApproved === true" @click="getApproval" text-color="black" label="Approve" style="margin-left: 1%;" />
+            <q-btn color="white" v-if="hidden === false && notApproved === false" style="margin-left: 1%;" @click="createPosition" text-color="black" label="Create Position" />
           </q-card-section>
         </q-card>
       </div>
@@ -101,6 +102,8 @@ import usABI from '../assets/usabi.json';
 import ethABI from '../assets/ethabi.json';
 import uniswapETHFTMAABI from '../assets/uniswapETHFTMAABI.json';
 import pools from '../assets/pools.json';
+import ethpool from '../assets/ethpool.json';
+import lqeth from '../assets/ethlq.json';
 
 export default {
   name: 'PageIndex',
@@ -127,6 +130,7 @@ export default {
       countDown: 'Loading...',
       notApproved: false,
       networkId: 56,
+      hidden: true,
     };
   },
   mounted() {
@@ -136,17 +140,32 @@ export default {
     async init() {
       if (this.$API.userAccount === undefined) {
         await this.$API.init(this.networkId);
+        this.networkId = this.$API.currentState.appNetworkId;
         this.CheckChainData();
       } else {
         this.CheckChainData();
       }
     },
     async CheckChainData() {
-      this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
+      console.log(this.networkId);
+      if (this.networkId === 56) {
+        this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
+      } else {
+        this.contract = new this.$API.web3.eth.Contract(lqeth, this.contractAddress);
+      }
       this.contract.methods.paused().call().then((response) => {
         this.paused = response;
       });
-      this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
+      if (this.networkId === 56) {
+        this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
+      } else if (this.tokenOptions.label === 'FMTA/USDC (Network: Ethereum)') {
+        this.uniswapETHFTMA = '0x650e8b9d20293a276f76be24da4ce25f2d0090fb'; // USDC/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(ethpool, this.uniswapETHFTMA);
+      } else if (this.tokenOptions.label === 'FMTA/ETH (Network: Ethereum)') {
+        this.uniswapETHFTMA = '0x8f6bcb61836f43cfdb7de46e2244d363d90527ef'; // USDC/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(ethpool, this.uniswapETHFTMA);
+      }
       this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
       this.uniswapETHFTMAContract.methods.allowance(this.$API.userAccount[0], '0x3A80a7C271450802D9a9E689A7a1D80EF727dfCb').call({
         from: this.$API.userAccount[0],
@@ -154,8 +173,10 @@ export default {
         if (receipt === '115792089237316195423570985008687907853269984665640564039457584007913129639935') {
           console.log(receipt);
           this.notApproved = false;
+          this.hidden = false;
         } else {
           this.notApproved = true;
+          this.hidden = false;
           console.log(receipt);
         }
       });
@@ -165,8 +186,16 @@ export default {
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amounts);
       const poolAddress = this.contractAddress;
       this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
-      this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
-      this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
+      if (this.networkId === 56) {
+        this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
+      } else if (this.tokenOptions.label === 'FMTA/USDC (Network: Ethereum)') {
+        this.uniswapETHFTMA = '0x650e8b9d20293a276f76be24da4ce25f2d0090fb'; // USDC/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(ethpool, this.uniswapETHFTMA);
+      } else if (this.tokenOptions.label === 'FMTA/ETH (Network: Ethereum)') {
+        this.uniswapETHFTMA = '0x8f6bcb61836f43cfdb7de46e2244d363d90527ef'; // USDC/FMTA Pool UNI-V2 Token
+        this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(ethpool, this.uniswapETHFTMA);
+      }
       this.uniswapETHFTMAContract.methods.approve(poolAddress, amount).send({
         from: this.$API.userAccount[0],
       }).then((receipt) => {
@@ -227,7 +256,13 @@ export default {
       const amountToWithdraw = this.$API.web3.utils.toWei(this.withdrawAmount, 'ether');
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountToWithdraw);
       this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
-      this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
+      if (this.networkId === 56) {
+        this.uniswapETHFTMA = '0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B'; // USDC/FMTA Pool UNI-V2 Token
+      } else if (this.tokenOptions.label === 'FMTA/USDC (Network: Ethereum)') {
+        this.uniswapETHFTMA = '0x650e8b9d20293a276f76be24da4ce25f2d0090fb'; // USDC/FMTA Pool UNI-V2 Token
+      } else if (this.tokenOptions.label === 'FMTA/ETH (Network: Ethereum)') {
+        this.uniswapETHFTMA = '0x8f6bcb61836f43cfdb7de46e2244d363d90527ef'; // USDC/FMTA Pool UNI-V2 Token
+      }
       this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
       this.uniswapETHFTMAContract.methods.approve('0x980c1aad0cabb7b8d445d2a96da1ec252bcc2274', amount).send({
         from: this.$API.userAccount[0],
