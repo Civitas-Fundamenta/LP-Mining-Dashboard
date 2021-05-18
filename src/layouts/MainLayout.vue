@@ -17,7 +17,7 @@
           <q-btn color="white" text-color="black" label="Sign In" @click="init()" />
         </div>
         <div v-else>
-          Signed in - V3.0.0
+          Signed in - V3.1.0
         </div>
 
       </q-toolbar>
