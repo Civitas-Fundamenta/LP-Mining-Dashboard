@@ -151,10 +151,12 @@ export default {
         from: this.$API.userAccount[0],
       }).then((receipt) => {
         if (receipt === '115792089237316195423570985008687907853269984665640564039457584007913129639935') {
+          // eslint-disable-next-line
           console.log(receipt);
           this.notApproved = false;
         } else {
           this.notApproved = true;
+          // eslint-disable-next-line
           console.log(receipt);
         }
       });

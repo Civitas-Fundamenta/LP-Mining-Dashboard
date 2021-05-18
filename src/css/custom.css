@@ -9,3 +9,17 @@ a {
   text-decoration: none;
   color: #fff;
 }
+
+.imgSize {
+  height: 600px;
+  padding-top: 10px;
+  padding-left: 30%;
+  padding-right: 30%;
+}
+
+@media (max-width: 1000px) {
+
+  .imgSize {
+    height: 375px;
+  }
+}

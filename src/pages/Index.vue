@@ -2,24 +2,28 @@
 <q-page>
     <div class="row text-center">
       <div class="col-xs-12 col-sm-6" style="padding: 2%;">
-        <q-card flat bordered class="cbg">
-          <i class="fas fa-coins fa-10x" style="padding: 25%;"></i>
+        <a href="/#/Mining">
+        <q-card flat bordered class="cbg imgSize">
+          <img src="../assets/miningPNG.png" />
           <q-card-section>
             <a href="/#/Mining">
-            <img src="../assets/miningPNG.png" />
+            <h4>Liquidity Mining</h4>
             </a>
           </q-card-section>
         </q-card>
+        </a>
       </div>
       <div class="col-xs-12 col-sm-6" style="padding: 2%;">
-        <q-card flat bordered class="cbg">
-          <img src="../assets/stakingPNG.png">
+        <a href="/#/Staking">
+        <q-card flat bordered class="cbg imgSize">
+          <img src="../assets/stakingPNG.png" />
         <q-card-section>
           <a href="/#/Staking">
-            <q-btn color="white" text-color="black" label="Token Staking" />
+          <h4>Token Staking</h4>
           </a>
         </q-card-section>
         </q-card>
+        </a>
       </div>
     </div>
 </q-page>
