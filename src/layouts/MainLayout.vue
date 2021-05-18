@@ -74,16 +74,15 @@
       </q-scroll-area>
     </q-drawer>
 
-    <q-dialog v-model="confirm" persistent>
-      <q-card>
+    <q-dialog v-model="confirm" dark persistent>
+      <q-card dark>
         <q-card-section class="row items-center">
-          <q-avatar icon="signal_wifi_off" color="primary" text-color="white" />
           <span class="q-ml-sm">Please Select A Network.</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="BSC" color="primary" @click="networkId = 56; init()" v-close-popup />
-          <q-btn flat label="Ethereum" color="primary" @click="networkId = 1; init()" v-close-popup />
+          <q-btn dark flat label="BSC" color="white" @click="networkId = 56; init()" v-close-popup />
+          <q-btn dark flat label="Ethereum" color="white" @click="networkId = 1; init()" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
