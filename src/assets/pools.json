@@ -1,5 +1,17 @@
 [{
-  "label": "FMTA/BNB",
+  "label": "FMTA/BNB (Network: BSC)",
   "pid": 0,
-  "tokenGeneric": "Uniswap V2 LP Token"
+  "tokenGeneric": "Uniswap V2 LP Token",
+  "address": "0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B",
+  "pool": "0xD6ad33F95dFcef3760De2889758E9fe5E3d5b12B"
+}, {
+  "label": "FMTA/ETH (Network: Ethereum)",
+  "pid": 0,
+  "tokenGeneric": "Uniswap V2 LP Token",
+  "address": "0xF6de2B6eAB93d3A0AEC5863e3190b319602A1e70"
+}, {
+  "label": "FMTA/USDC (Network: Ethereum)",
+  "pid": 1,
+  "tokenGeneric": "Uniswap V2 LP Token",
+  "address": "0xB187c8E40b46Ae8fc19A6cC24bb60320a73b9abD"
 }]
