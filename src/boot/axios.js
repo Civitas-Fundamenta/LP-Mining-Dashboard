@@ -5,7 +5,7 @@ import Web3 from 'web3';
 
 const API = {};
 const apiKey = '0ee58158-e48f-492b-b7df-92554915a6b3';
-const networkId = 56;
+// const networkId = 56;
 const FORTMATIC_KEY = 'pk_live_61EC2B200F4216C6';
 const PORTIS_KEY = '924889fa-9818-473f-8ceb-a86b7248d5c5';
 const INFURA_KEY = 'ad2ee80801ce45de9dd717e612c904cb';
@@ -104,26 +104,27 @@ const wallets = [
   },
 ];
 let web3;
-const onboard = Onboard({
-  dappId: apiKey,
-  networkId,
-  darkMode: true,
-  subscriptions: {
-    wallet: (wallet) => {
-      web3 = new Web3(wallet.provider);
-      API.web3 = web3;
-    },
-  },
-  walletSelect: {
-    heading: 'Welcome to the Fundamenta App!',
-    description: 'In order to interact with our Staking and Liquidity mining dashboard please select your wallet below, then follow the steps on screen to begin using Fundamenta app.',
-    wallets,
-  },
-});
-API.onboard = onboard;
 let userAccount;
 API.userStatus = false;
-API.init = () => new Promise((resolve) => {
+API.init = (networkId) => new Promise((resolve) => {
+  const onboard = Onboard({
+    dappId: apiKey,
+    networkId,
+    darkMode: true,
+    subscriptions: {
+      wallet: (wallet) => {
+        web3 = new Web3(wallet.provider);
+        API.web3 = web3;
+      },
+    },
+    walletSelect: {
+      heading: 'Welcome to the Fundamenta App!',
+      description: 'In order to interact with our Staking and Liquidity mining dashboard please select your wallet below, then follow the steps on screen to begin using Fundamenta app.',
+      wallets,
+    },
+  });
+  API.onboard = onboard;
+  API.currentState = onboard.getState();
   const func = async () => {
     await onboard.walletSelect();
     await onboard.walletCheck();
