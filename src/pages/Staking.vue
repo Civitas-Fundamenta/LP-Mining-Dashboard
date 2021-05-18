@@ -330,7 +330,7 @@ export default {
   methods: {
     async init() {
       if (this.$API.userAccount === undefined) {
-        await this.$API.init();
+        await this.$API.init(this.networkId);
         this.staking = new this.$API.web3.eth.Contract(ABI, stakingAddress);
         this.CheckChainData();
       } else {

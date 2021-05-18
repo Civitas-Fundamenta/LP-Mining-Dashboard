@@ -73,6 +73,21 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
+
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="signal_wifi_off" color="primary" text-color="white" />
+          <span class="q-ml-sm">Please Select A Network.</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="BSC" color="primary" @click="networkId = 56; init()" v-close-popup />
+          <q-btn flat label="Ethereum" color="primary" @click="networkId = 1; init()" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -87,16 +102,19 @@ export default {
     return {
       drawer: false,
       inited: false,
+      networkId: 56,
+      confirm: false,
     };
   },
   mounted() {
-    this.init();
+    this.confirm = true;
   },
   methods: {
     async init() {
       if (this.$API.userAccount === undefined) {
-        await this.$API.init();
+        await this.$API.init(this.networkId);
         this.inited = true;
+        console.log(this.$API.currentState);
       }
     },
   },

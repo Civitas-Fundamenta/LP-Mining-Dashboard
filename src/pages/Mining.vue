@@ -126,6 +126,7 @@ export default {
       contract: '',
       countDown: 'Loading...',
       notApproved: false,
+      networkId: 56,
     };
   },
   mounted() {
@@ -134,7 +135,7 @@ export default {
   methods: {
     async init() {
       if (this.$API.userAccount === undefined) {
-        await this.$API.init();
+        await this.$API.init(this.networkId);
         this.CheckChainData();
       } else {
         this.CheckChainData();
