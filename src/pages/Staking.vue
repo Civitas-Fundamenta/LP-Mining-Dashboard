@@ -322,6 +322,7 @@ export default {
       userAccount: [],
       staking: {},
       pending: false,
+      networkId: 56,
     };
   },
   mounted() {
@@ -335,6 +336,7 @@ export default {
         this.CheckChainData();
       } else {
         this.staking = new this.$API.web3.eth.Contract(ABI, stakingAddress);
+        this.networkId = this.$API.currentState.appNetworkId;
         this.CheckChainData();
       }
     },
