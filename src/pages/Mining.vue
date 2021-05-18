@@ -143,6 +143,7 @@ export default {
         this.networkId = this.$API.currentState.appNetworkId;
         this.CheckChainData();
       } else {
+        this.networkId = this.$API.currentState.appNetworkId;
         this.CheckChainData();
       }
     },
