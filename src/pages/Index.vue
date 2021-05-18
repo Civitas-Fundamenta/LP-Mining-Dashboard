@@ -6,7 +6,7 @@
           <i class="fas fa-coins fa-10x" style="padding: 25%;"></i>
           <q-card-section>
             <a href="/#/Mining">
-            <img src="../assets/miningPNG.png"
+            <img src="../assets/miningPNG.png" />
             </a>
           </q-card-section>
         </q-card>
