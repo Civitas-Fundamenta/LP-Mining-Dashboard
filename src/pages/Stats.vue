@@ -58,8 +58,6 @@
 </template>
 
 <script>
-import fetch from 'isomorphic-fetch';
-
 export default {
   name: 'PageIndex',
   data() {
@@ -80,28 +78,19 @@ export default {
   },
   methods: {
     async calculateCirculatingSupply() {
-      this.$axios.get('https://api.fundamenta.network/circulating_supply').then((result) => {
+      await this.$axios.get('https://api.fundamenta.network/circulating_supply').then((result) => {
         this.circulatingSupply = result.data;
       });
       this.getMarketCap();
     },
     async getMarketCap() {
-      fetch('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `{
-              pair(id: "0x650e8b9d20293a276f76be24da4ce25f2d0090fb")
-            {
-              token0Price
-            }
-          }`,
-        }),
-      }).then((ress) => ress.json()).then((result) => {
-        this.price = parseFloat(result.data.pair.token0Price);
+      this.$axios.get('https://api.coingecko.com/api/v3/simple/price?ids=fundamenta&vs_currencies=usd&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false').then((result) => {
+        this.price = result.data.fundamenta.usd;
+        console.log(this.price);
+        console.log(this.circulatingSupply);
         this.marketCap = (this.circulatingSupply * this.price);
+        console.log(this.circulatingSupply, this.price);
+        console.log(this.marketCap);
       });
     },
     async calculateStake() {
