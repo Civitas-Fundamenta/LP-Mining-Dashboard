@@ -173,7 +173,7 @@ export default {
         if (receipt === '115792089237316195423570985008687907853269984665640564039457584007913129639935') {
           this.notApproved = false;
           this.hidden = false;
-          this.$q.notify('Approval Not Required.');
+          this.$q.notify('Approval Not Required. Please select create position.');
         } else {
           this.notApproved = true;
           this.hidden = false;
