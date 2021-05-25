@@ -276,13 +276,17 @@
       The Contract is Currently Paused, Please check back later.
     </q-banner>
   </div>
-  <q-dialog v-model="pending">
-      <q-card dark>
-        <q-card-section>
-          <div class="text-h6">Hey! You have {{ pendingRewards }} FMTA pending withdrawal!</div>
-        </q-card-section>
 
-        <q-card-section class="q-pt-none">
+  <q-dialog v-model="pending" dark persistent>
+      <q-card dark>
+        <q-toolbar dark>
+          <q-avatar>
+            <img src="../assets/logocf.svg">
+          </q-avatar>
+          <q-toolbar-title><span class="text-weight-bold">Hey!</span> You have {{ pendingRewards }} FMTA pending withdrawal!</q-toolbar-title>
+        </q-toolbar>
+
+        <q-card-section>
           Stake lock Period is 13000 blocks (48 hours). <br /><br /> This is reset every Time you withdraw pending rewards or remove stake. <br /> <br /> Pending rewards
           are also withdrawn when removing.
         </q-card-section>

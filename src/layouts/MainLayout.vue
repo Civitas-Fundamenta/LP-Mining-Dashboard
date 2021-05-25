@@ -76,8 +76,15 @@
 
     <q-dialog v-model="confirm" dark persistent>
       <q-card dark>
-        <q-card-section class="row items-center">
-          <span class="q-ml-sm">Please Select A Network.</span>
+        <q-toolbar dark>
+          <q-avatar>
+            <img src="../assets/logocf.svg">
+          </q-avatar>
+          <q-toolbar-title><span class="text-weight-bold">Welcome</span> to the Fundamenta dApp. </q-toolbar-title>
+        </q-toolbar>
+
+        <q-card-section>
+          Please select the network you'd like to use below. After Selecting your prefered network you will be asked to connect your wallet.
         </q-card-section>
 
         <q-card-actions align="right">
@@ -113,7 +120,6 @@ export default {
       if (this.$API.userAccount === undefined) {
         await this.$API.init(this.networkId);
         this.inited = true;
-        console.log(this.$API.currentState);
       }
     },
   },
