@@ -148,6 +148,7 @@ export default {
       }
     },
     async CheckChainData() {
+      this.$q.loading.show();
       if (this.networkId === 56) {
         this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
       } else {
@@ -180,6 +181,7 @@ export default {
           this.$q.notify('Approval Required, please click approve.');
         }
       });
+      this.$q.loading.hide();
     },
     async getApproval() {
       const amounts = '115792089237316195423570985008687907853269984665640564039457584007913129639935';
@@ -196,11 +198,16 @@ export default {
         this.uniswapETHFTMA = '0x8f6bcb61836f43cfdb7de46e2244d363d90527ef'; // USDC/FMTA Pool UNI-V2 Token
         this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(ethpool, this.uniswapETHFTMA);
       }
+      this.$q.loading.show();
       this.uniswapETHFTMAContract.methods.approve(poolAddress, amount).send({
         from: this.$API.userAccount[0],
       }).then((receipt) => {
+        this.$q.loading.hide();
         this.$q.notify(`Stake Added - Transaction Hash: ${receipt.hash}`);
         this.CheckChainData();
+      }).catch((error) => {
+        this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
     async createPosition() {
@@ -209,8 +216,16 @@ export default {
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountInt);
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
       const lockInPeriod = this.$API.web3.eth.abi.encodeParameter('uint256', this.lockPeriod);
+      this.$q.loading.show();
       this.contract.methods.addPosition(amount, lockInPeriod, poolId).send({
         from: this.$API.userAccount[0],
+      }).then((receipt) => {
+        this.$q.loading.hide();
+        this.$q.notify(`Stake Added - Transaction Hash: ${receipt.hash}`);
+        this.CheckChainData();
+      }).catch((error) => {
+        this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
     async countDownFunc() {
@@ -264,11 +279,16 @@ export default {
         this.uniswapETHFTMA = '0x8f6bcb61836f43cfdb7de46e2244d363d90527ef'; // USDC/FMTA Pool UNI-V2 Token
       }
       this.uniswapETHFTMAContract = new this.$API.web3.eth.Contract(uniswapETHFTMAABI, this.uniswapETHFTMA);
+      this.$q.loading.show();
       this.uniswapETHFTMAContract.methods.approve('0x980c1aad0cabb7b8d445d2a96da1ec252bcc2274', amount).send({
         from: this.$API.userAccount[0],
       }).then((receipt) => {
+        this.$q.loading.hide();
         this.$q.notify(`Approved - Transaction Hash: ${receipt.hash}`);
         this.withdrawFinal();
+      }).catch((error) => {
+        this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
     async withdrawFinal() {
@@ -278,16 +298,32 @@ export default {
       if (this.tokenOptions.label === 'FMTA/BNB') {
         this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
       }
+      this.$q.loading.show();
       this.contract.methods.withdrawAccruedYieldAndAdd(poolId, amount).send({
         from: this.$API.userAccount[0],
+      }).then((response) => {
+        this.$q.loading.hide();
+        const hash = response.transactionHash;
+        this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
+      }).catch((error) => {
+        this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
     async withdrawOnly() {
       this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', 0);
+      this.$q.loading.show();
       this.contract.methods.withdrawAccruedYieldAndAdd(poolId, amount).send({
         from: this.$API.userAccount[0],
+      }).then((response) => {
+        this.$q.loading.hide();
+        const hash = response.transactionHash;
+        this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
+      }).catch((error) => {
+        this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
     async removeEntirePosition() {
@@ -296,8 +332,16 @@ export default {
       this.contract.methods.provider(poolId, this.$API.userAccount[0]).call().then((response) => {
         const entirePosition = response.LockedAmount;
         const entirePositionFinal = this.$API.web3.eth.abi.encodeParameter('uint256', entirePosition);
+        this.$q.loading.show();
         this.contract.methods.removePosition(entirePositionFinal, poolId).send({
           from: this.$API.userAccount[0],
+        }).then((resp) => {
+          this.$q.loading.hide();
+          const hash = resp.transactionHash;
+          this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
+        }).catch((error) => {
+          this.$q.notify(error);
+          this.$q.loading.hide();
         });
       });
     },

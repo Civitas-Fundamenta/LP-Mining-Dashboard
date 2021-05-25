@@ -345,6 +345,7 @@ export default {
       }
     },
     async CheckChainData() {
+      this.$q.loading.show();
       this.staking.methods.stakingOff().call().then((response) => {
         this.off = response;
       });
@@ -383,6 +384,7 @@ export default {
         } else {
           this.withdrawable = 0;
         }
+        this.$q.loading.hide();
       });
     },
     async checkForWithdraw() {
@@ -411,22 +413,29 @@ export default {
     async addStake() {
       const amountInt = this.$API.web3.utils.toWei(this.addStakeAmount, 'ether');
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountInt);
+      this.$q.loading.show();
       this.staking.methods.createStake(amount).send({
         from: this.$API.userAccount[0],
       }).then((response) => {
+        this.$q.loading.hide();
         const hash = response.transactionHash;
         this.$q.notify(`Stake Added - Transaction Hash: ${hash}`);
         setTimeout(() => {
           this.CheckChainData();
         }, 3000);
+      }).catch((error) => {
+        this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
     async removeStake() {
       const amountInt = this.$API.web3.utils.toWei(this.removeStakeAmount, 'ether');
       const amount = this.$API.web3.eth.abi.encodeParameter('uint256', amountInt);
+      this.$q.loading.show();
       this.staking.methods.removeStake(amount).send({
         from: this.$API.userAccount[0],
       }).then((response) => {
+        this.$q.loading.hide();
         const hash = response.transactionHash;
         this.$q.notify(`Stake Removed - Transaction Hash: ${hash}`);
         setTimeout(() => {
@@ -434,23 +443,31 @@ export default {
         }, 3000);
       }).catch((error) => {
         this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
     async withdrawStake() {
+      this.$q.loading.show();
       this.staking.methods.withdrawReward().send({
         from: this.$API.userAccount[0],
       }).then((response) => {
+        this.$q.loading.hide();
         const hash = response.transactionHash;
         this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
         setTimeout(() => {
           this.CheckChainData();
         }, 3000);
+      }).catch((error) => {
+        this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
     async compound() {
+      this.$q.loading.show();
       this.staking.methods.compoundRewards().send({
         from: this.$API.userAccount[0],
       }).then((response) => {
+        this.$q.loading.hide();
         const hash = response.transactionHash;
         this.$q.notify(`Stake Compounded - Transaction Hash: ${hash}`);
         setTimeout(() => {
@@ -458,6 +475,7 @@ export default {
         }, 3000);
       }).catch((error) => {
         this.$q.notify(error);
+        this.$q.loading.hide();
       });
     },
   },
