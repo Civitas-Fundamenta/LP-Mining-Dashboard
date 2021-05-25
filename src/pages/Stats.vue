@@ -86,11 +86,7 @@ export default {
     async getMarketCap() {
       this.$axios.get('https://api.coingecko.com/api/v3/simple/price?ids=fundamenta&vs_currencies=usd&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false').then((result) => {
         this.price = result.data.fundamenta.usd;
-        console.log(this.price);
-        console.log(this.circulatingSupply);
         this.marketCap = (this.circulatingSupply * this.price);
-        console.log(this.circulatingSupply, this.price);
-        console.log(this.marketCap);
       });
     },
     async calculateStake() {

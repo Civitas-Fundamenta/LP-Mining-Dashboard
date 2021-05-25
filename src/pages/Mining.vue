@@ -148,7 +148,6 @@ export default {
       }
     },
     async CheckChainData() {
-      console.log(this.networkId);
       if (this.networkId === 56) {
         this.contract = new this.$API.web3.eth.Contract(ethABI, this.contractAddress);
       } else {
@@ -172,13 +171,13 @@ export default {
         from: this.$API.userAccount[0],
       }).then((receipt) => {
         if (receipt === '115792089237316195423570985008687907853269984665640564039457584007913129639935') {
-          console.log(receipt);
           this.notApproved = false;
           this.hidden = false;
+          this.$q.notify('Approval Not Required.');
         } else {
           this.notApproved = true;
           this.hidden = false;
-          console.log(receipt);
+          this.$q.notify('Approval Required, please click approve.');
         }
       });
     },
