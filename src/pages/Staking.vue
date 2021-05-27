@@ -95,7 +95,7 @@
           <div class="shadow-5">
             <q-card bordered class="my-card cbg">
               <q-card-section class="">
-                <div class="text-h6">Add Stake</div>
+                <div class="text-h6">Add Stake - Balance: {{ balance }}</div>
               </q-card-section>
 
               <q-card-section class="q-pt-none">
@@ -135,7 +135,7 @@
             <div class="shadow-5">
               <q-card bordered class="my-card cbg">
                 <q-card-section class="">
-                  <div class="text-h6">Add Stake - Currently Staking: {{ stakeOf.toLocaleString() }}</div>
+                  <div class="text-h6">Add Stake - Balance: {{ balance.toLocaleString() }}</div>
                 </q-card-section>
 
                 <q-card-section class="q-pt-none">
@@ -303,8 +303,10 @@
 
 <script>
 import ABI from '../assets/stakingUpdate.json';
+import token from '../assets/token.json';
 
 const stakingAddress = '0x11Fe61999d17CC5Db98CAe0De6401B35268d2CeD';
+const tokenAddy = '0xaa9d866666c2a3748d6b23ff69e63e52f08d9ab4';
 
 export default {
   name: 'PageIndex',
@@ -316,7 +318,7 @@ export default {
       stakeCap: '',
       isStakeholder: false,
       rewardCalc: 0,
-      stakeOf: '',
+      stakeOf: 0,
       rewardsWindow: '',
       addStakeAmount: '',
       lastWdheight: '',
@@ -327,6 +329,7 @@ export default {
       staking: {},
       pending: false,
       networkId: 56,
+      balance: 0,
     };
   },
   mounted() {
@@ -346,6 +349,10 @@ export default {
     },
     async CheckChainData() {
       this.$q.loading.show();
+      const tokenContract = new this.$API.web3.eth.Contract(token, tokenAddy);
+      tokenContract.methods.balanceOf(this.$API.userAccount[0]).call().then((response) => {
+        this.balance = (response / 1000000000000000000);
+      });
       this.staking.methods.stakingOff().call().then((response) => {
         this.off = response;
       });
