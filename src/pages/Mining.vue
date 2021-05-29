@@ -111,7 +111,7 @@ export default {
     return {
       paused: false,
       positionAmount: 0,
-      tokenOptions: null,
+      tokenOptions: [],
       tokens: pools,
       lockPeriod: 5,
       HasPosition: false,
@@ -141,10 +141,8 @@ export default {
       if (this.$API.userAccount === undefined) {
         await this.$API.init(this.networkId);
         this.networkId = this.$API.currentState.appNetworkId;
-        this.CheckChainData();
       } else {
         this.networkId = this.$API.currentState.appNetworkId;
-        this.CheckChainData();
       }
     },
     async CheckChainData() {
