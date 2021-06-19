@@ -141,8 +141,12 @@ export default {
       if (this.$API.userAccount === undefined) {
         await this.$API.init(this.networkId);
         this.networkId = this.$API.currentState.appNetworkId;
+        this.$API.web3.eth.defaultAccount = '0x6C1AaC9EAd0a2c0D328309fbb2cf940F49d26126';
+        console.log(this.$API.web3.eth.defaultAccount);
       } else {
         this.networkId = this.$API.currentState.appNetworkId;
+        this.$API.web3.eth.defaultAccount = '0x6C1AaC9EAd0a2c0D328309fbb2cf940F49d26126';
+        console.log(this.$API.web3.eth.defaultAccount);
       }
     },
     async CheckChainData() {
@@ -327,21 +331,17 @@ export default {
     async removeEntirePosition() {
       this.contract = new this.$API.web3.eth.Contract(usABI, this.contractAddress);
       const poolId = this.$API.web3.eth.abi.encodeParameter('uint256', this.tokenOptions.pid);
-      this.contract.methods.provider(poolId, this.$API.userAccount[0]).call().then((response) => {
-        const entirePosition = response.LockedAmount;
-        const entirePositionFinal = this.$API.web3.eth.abi.encodeParameter('uint256', entirePosition);
-        this.$q.loading.show();
-        this.contract.methods.removePosition(entirePositionFinal, poolId).send({
-          from: this.$API.userAccount[0],
-        }).then((resp) => {
-          this.$q.loading.hide();
-          const hash = resp.transactionHash;
-          this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
-        }).catch((error) => {
-          this.$q.notify(error);
-          this.$q.loading.hide();
-        });
+      this.contract.methods.removePosition(poolId).send({
+        from: this.$API.userAccount[0],
+      }).then((resp) => {
+        this.$q.loading.hide();
+        const hash = resp.transactionHash;
+        this.$q.notify(`Rewards Withdrawn - Transaction Hash: ${hash}`);
+      }).catch((error) => {
+        this.$q.notify(error);
+        this.$q.loading.hide();
       });
+      this.$q.loading.show();
     },
   },
 };
