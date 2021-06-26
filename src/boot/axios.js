@@ -8,7 +8,6 @@ const apiKey = '0ee58158-e48f-492b-b7df-92554915a6b3';
 // const networkId = 56;
 const FORTMATIC_KEY = 'pk_live_61EC2B200F4216C6';
 const PORTIS_KEY = '924889fa-9818-473f-8ceb-a86b7248d5c5';
-const INFURA_KEY = 'ad2ee80801ce45de9dd717e612c904cb';
 const APP_URL = 'https://app.fundamenta.network';
 const CONTACT_EMAIL = 'admin@fundamenta.network';
 const RPC_URL = 'https://ropsten.infura.io/v3/ad2ee80801ce45de9dd717e612c904cb';
@@ -56,7 +55,10 @@ const wallets = [
   },
   {
     walletName: 'walletConnect',
-    infuraKey: INFURA_KEY,
+    rpc: {
+      1: 'https://mainnet.infura.io/v3/ad2ee80801ce45de9dd717e612c904cb',
+      56: 'https://bsc-dataseed.binance.org',
+    },
     preferred: true,
   },
   {
@@ -107,9 +109,16 @@ let web3;
 let userAccount;
 API.userStatus = false;
 API.init = (networkId) => new Promise((resolve) => {
+  let networkName = '';
+  if (networkId === 56) {
+    networkName = 'Binance Smart Chain';
+  } else {
+    networkName = 'Ethereum Mainnet';
+  }
   const onboard = Onboard({
     dappId: apiKey,
     networkId,
+    networkName,
     darkMode: true,
     subscriptions: {
       wallet: (wallet) => {
