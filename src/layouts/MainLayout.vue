@@ -17,7 +17,7 @@
           <q-btn color="white" text-color="black" label="Sign In" @click="init()" />
         </div>
         <div v-else>
-          Signed in - V3.1.0
+          <q-btn color="white" style="margin-left: 0.1%" text-color="black" label="Logout" @click="logout()" />
         </div>
 
       </q-toolbar>
@@ -118,9 +118,19 @@ export default {
   methods: {
     async init() {
       if (this.$API.userAccount === undefined) {
-        await this.$API.init(this.networkId);
-        this.inited = true;
+        await this.$API.init(this.networkId).then((result) => {
+          this.inited = true;
+          console.log(result);
+        }).catch((err) => {
+          console.log(err);
+        });
       }
+    },
+    async logout() {
+      await this.$API.onboard.walletReset();
+      this.inited = false;
+      this.$API.userAccount = undefined;
+      this.confirm = true;
     },
   },
 };
